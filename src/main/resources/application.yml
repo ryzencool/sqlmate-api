@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:55435/sqlmate?currentSchema=public&useSSL=false
+    password: abc123
+    username: postgres
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      insert-strategy: not_empty
+      select-strategy: not_empty
+      update-strategy: not_empty
+      id-type: auto
+  type-handlers-package: com.marsh.mpext.common
+  mapper-locations: classpath*:/repository/*.xml
