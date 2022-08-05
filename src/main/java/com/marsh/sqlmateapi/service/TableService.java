@@ -27,4 +27,8 @@ public class TableService {
     public TableInfo getTable(Integer tableId) {
         return tableInfoMapper.selectById(tableId);
     }
+
+    public Object listAll(TableQueryReq req) {
+        return null;
+    }
 }

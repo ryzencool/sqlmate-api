@@ -25,5 +25,12 @@ public class TableController {
         return BaseResponse.success(tableService.listTable(req));
     }
 
+    @GetMapping("/listAll")
+    public BaseResponse<Object> listAll(TableQueryReq req) {
+        return BaseResponse.success(tableService.listAll(req));
+    }
+
+
+
 
 }

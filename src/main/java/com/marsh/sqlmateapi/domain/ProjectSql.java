@@ -1,8 +1,6 @@
 package com.marsh.sqlmateapi.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.marsh.mpext.common.StringArrayTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,30 +12,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableColumn {
+public class ProjectSql {
 
     @TableId
-    private Long id;
+    private Integer id;
 
-    private Integer tableId;
+    private Integer projectId;
 
-    private String name;
-
-    private String type;
-
-    private String defaultValue;
-
-    private Boolean isNull;
-
-    private Boolean isUniqueKey;
-
-    private Boolean isPrimaryKey;
-
-    private Boolean isAutoIncrement;
+    private String sql;
 
     private String note;
 
-    private String comment;
+    private String advisor;
+
+    private String[] dynamicParams;
 
     private LocalDateTime createTime;
 
@@ -48,5 +36,4 @@ public class TableColumn {
     private Integer updateId;
 
     private Boolean isDel;
-
 }

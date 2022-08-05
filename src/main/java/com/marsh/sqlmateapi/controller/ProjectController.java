@@ -1,10 +1,15 @@
 package com.marsh.sqlmateapi.controller;
 
 import com.marsh.sqlmateapi.controller.request.AddProjectReq;
+import com.marsh.sqlmateapi.controller.request.ProjectDetailQueryReq;
 import com.marsh.sqlmateapi.controller.request.ProjectQueryReq;
+import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
+import com.marsh.sqlmateapi.domain.ProjectInfo;
 import com.marsh.sqlmateapi.service.ProjectService;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/project")
@@ -23,13 +28,13 @@ public class ProjectController {
     }
 
     @GetMapping("/list")
-    public void listProject(ProjectQueryReq req) {
-        projectService.listProject(req);
+    public BaseResponse<List<ProjectInfo>> listProject(ProjectQueryReq req) {
+       return BaseResponse.success( projectService.listProject(req));
     }
 
     @GetMapping("/get")
-    public void projectDetail() {
-
+    public BaseResponse<ProjectStatResp> projectDetail(ProjectDetailQueryReq req) {
+        return BaseResponse.success(projectService.getProject(req.getProjectId()));
     }
 
     @PostMapping("/del")

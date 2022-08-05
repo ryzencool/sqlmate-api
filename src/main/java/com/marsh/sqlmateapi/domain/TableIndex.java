@@ -14,30 +14,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableColumn {
+public class TableIndex {
 
     @TableId
-    private Long id;
-
-    private Integer tableId;
+    private Integer id;
 
     private String name;
 
+    private Integer tableId;
+
     private String type;
 
-    private String defaultValue;
-
-    private Boolean isNull;
-
-    private Boolean isUniqueKey;
-
-    private Boolean isPrimaryKey;
-
-    private Boolean isAutoIncrement;
-
-    private String note;
-
-    private String comment;
+    @TableField(typeHandler = StringArrayTypeHandler.class)
+    private String[] columns;
 
     private LocalDateTime createTime;
 
@@ -48,5 +37,4 @@ public class TableColumn {
     private Integer updateId;
 
     private Boolean isDel;
-
 }
