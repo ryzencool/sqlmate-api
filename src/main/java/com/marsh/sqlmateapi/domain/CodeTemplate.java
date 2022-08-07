@@ -1,29 +1,29 @@
 package com.marsh.sqlmateapi.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.marsh.mpext.json.JsonTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectSql {
+public class CodeTemplate {
 
     @TableId
     private Integer id;
 
-    private Integer projectId;
+    private String name;
 
-    private String sql;
-
-    private Boolean isFavorite;
-
-    private String note;
+    @TableField(typeHandler = JsonTypeHandler.class)
+    private List<CodeTemplateFile> files;
 
     private LocalDateTime createTime;
 
