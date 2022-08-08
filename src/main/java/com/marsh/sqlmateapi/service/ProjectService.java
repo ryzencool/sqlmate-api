@@ -1,8 +1,10 @@
 package com.marsh.sqlmateapi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.marsh.sqlmateapi.controller.request.AddProjectReq;
 import com.marsh.sqlmateapi.controller.request.ProjectQueryReq;
+import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
 import com.marsh.sqlmateapi.domain.ProjectInfo;
 import com.marsh.sqlmateapi.domain.ProjectSql;
@@ -53,5 +55,9 @@ public class ProjectService {
 
         return ProjectStatResp.builder().projectInfo(project).sqlCount(sqlCount).tableCount(tableCount).build();
 
+    }
+
+    public Page<ProjectInfo> pagePublic(PublicProjectQueryReq req) {
+        return projectInfoMapper.selectPage(req.page(), new QueryWrapper<ProjectInfo>().lambda().like(req.getName() != null ,ProjectInfo::getName, req.getName()));
     }
 }

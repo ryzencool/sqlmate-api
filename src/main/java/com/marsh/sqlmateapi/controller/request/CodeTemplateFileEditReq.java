@@ -9,11 +9,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateEditReq {
+public class CodeTemplateFileEditReq {
 
-    private String name;
+    private Integer id;
 
-    private String lang;
+    private Integer templateId;
 
-    private Integer projectId;
+    private String fileName;
+
+    private String fileType;
+
+    private String transferFn;
+
+    private String content;
 }

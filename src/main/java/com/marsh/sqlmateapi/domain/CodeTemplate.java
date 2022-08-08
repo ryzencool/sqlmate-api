@@ -22,8 +22,9 @@ public class CodeTemplate {
 
     private String name;
 
-    @TableField(typeHandler = JsonTypeHandler.class)
-    private List<CodeTemplateFile> files;
+    private String lang;
+
+    private Integer projectId;
 
     private LocalDateTime createTime;
 

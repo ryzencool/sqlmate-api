@@ -13,5 +13,7 @@ public class ProjectSqlAddReq {
 
     private Integer projectId;
 
+    private String name;
+
     private String sql;
 }

@@ -1,5 +1,6 @@
 package com.marsh.sqlmateapi.controller.request;
 
+import com.marsh.zutils.entity.BaseRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,11 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateEditReq {
+public class PublicProjectQueryReq extends BaseRequest {
 
     private String name;
-
-    private String lang;
-
-    private Integer projectId;
 }

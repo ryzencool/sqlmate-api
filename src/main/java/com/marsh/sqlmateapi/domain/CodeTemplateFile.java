@@ -14,8 +14,27 @@ import java.time.LocalDateTime;
 @Builder
 public class CodeTemplateFile {
 
+    @TableId
+    private Integer id;
+
+    private Integer templateId;
+
+    private String transferFn;
+
     private String fileName;
 
+    private String fileType;
+
     private String content;
+
+    private LocalDateTime createTime;
+
+    private LocalDateTime updateTime;
+
+    private Integer createId;
+
+    private Integer updateId;
+
+    private Boolean isDel;
 
 }

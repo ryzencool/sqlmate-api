@@ -3,10 +3,12 @@ package com.marsh.sqlmateapi.controller;
 import com.marsh.sqlmateapi.controller.request.AddProjectReq;
 import com.marsh.sqlmateapi.controller.request.ProjectDetailQueryReq;
 import com.marsh.sqlmateapi.controller.request.ProjectQueryReq;
+import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
 import com.marsh.sqlmateapi.domain.ProjectInfo;
 import com.marsh.sqlmateapi.service.ProjectService;
 import com.marsh.zutils.entity.BaseResponse;
+import com.marsh.zutils.entity.PageResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +34,10 @@ public class ProjectController {
        return BaseResponse.success( projectService.listProject(req));
     }
 
+    @GetMapping("/public/page")
+    public BaseResponse<PageResponse<ProjectInfo>> pagePublic(PublicProjectQueryReq req) {
+        return BaseResponse.success(PageResponse.of(projectService.pagePublic(req)));
+    }
     @GetMapping("/get")
     public BaseResponse<ProjectStatResp> projectDetail(ProjectDetailQueryReq req) {
         return BaseResponse.success(projectService.getProject(req.getProjectId()));

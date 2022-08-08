@@ -19,6 +19,8 @@ public class ProjectSql {
 
     private Integer projectId;
 
+    private String name;
+
     private String sql;
 
     private Boolean isFavorite;

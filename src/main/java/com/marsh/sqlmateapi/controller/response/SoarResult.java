@@ -1,4 +1,4 @@
-package com.marsh.sqlmateapi.controller.request;
+package com.marsh.sqlmateapi.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateEditReq {
+public class SoarResult {
 
-    private String name;
+    private Integer score;
 
-    private String lang;
+    private SoarAdvice[] advice;
 
-    private Integer projectId;
+
 }

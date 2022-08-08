@@ -2,8 +2,12 @@ package com.marsh.sqlmateapi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.marsh.sqlmateapi.controller.request.CodeTemplateEditReq;
+import com.marsh.sqlmateapi.controller.request.CodeTemplateFileEditReq;
+import com.marsh.sqlmateapi.controller.request.CodeTemplateFileQueryReq;
 import com.marsh.sqlmateapi.controller.request.TemplateQueryReq;
 import com.marsh.sqlmateapi.domain.CodeTemplate;
+import com.marsh.sqlmateapi.domain.CodeTemplateFile;
+import com.marsh.sqlmateapi.mapper.CodeTemplateFileMapper;
 import com.marsh.sqlmateapi.mapper.CodeTemplateMapper;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
@@ -13,9 +17,11 @@ import java.util.List;
 @Service
 public class CodeTemplateService {
 
+    private final CodeTemplateFileMapper codeTemplateFileMapper;
     private final CodeTemplateMapper codeTemplateMapper;
 
-    public CodeTemplateService(CodeTemplateMapper codeTemplateMapper) {
+    public CodeTemplateService(CodeTemplateFileMapper codeTemplateFileMapper, CodeTemplateMapper codeTemplateMapper) {
+        this.codeTemplateFileMapper = codeTemplateFileMapper;
         this.codeTemplateMapper = codeTemplateMapper;
     }
 
@@ -36,5 +42,20 @@ public class CodeTemplateService {
 
     public void updateTemplate(CodeTemplateEditReq req) {
         var tpl = BeanUtil.transfer(req, CodeTemplate.class);
+    }
+
+    public void addFile(CodeTemplateFileEditReq req) {
+        var file = BeanUtil.transfer(req, CodeTemplateFile.class);
+        codeTemplateFileMapper.insert(file);
+    }
+
+    public List<CodeTemplateFile> listFile(CodeTemplateFileQueryReq req) {
+        return codeTemplateFileMapper.selectList(new QueryWrapper<CodeTemplateFile>()
+                .lambda()
+                .eq(CodeTemplateFile::getTemplateId, req.getTemplateId()));
+    }
+
+    public List<CodeTemplateFile> getFile(CodeTemplateFileQueryReq req) {
+        return codeTemplateFileMapper.selectList(new QueryWrapper<CodeTemplateFile>().lambda().eq(CodeTemplateFile::getTemplateId, req.getTemplateId()));
     }
 }

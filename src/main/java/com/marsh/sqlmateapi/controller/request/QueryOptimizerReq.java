@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateEditReq {
+public class QueryOptimizerReq {
 
-    private String name;
-
-    private String lang;
-
-    private Integer projectId;
+    private String[] sql;
 }
