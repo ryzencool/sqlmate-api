@@ -12,20 +12,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectInfo {
+public class User {
 
     @TableId
     private Integer id;
 
-    private String name;
+    private String username;
 
-    private String note;
+    private String email;
 
-    private String dbType;
+    private String password;
 
-    private String ownerId;
-
-    private Integer parentProjectId;
+    private String phone;
 
     private LocalDateTime createTime;
 

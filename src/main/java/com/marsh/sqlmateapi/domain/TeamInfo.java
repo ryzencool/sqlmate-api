@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectInfo {
+public class TeamInfo {
 
     @TableId
     private Integer id;
@@ -21,11 +21,7 @@ public class ProjectInfo {
 
     private String note;
 
-    private String dbType;
-
-    private String ownerId;
-
-    private Integer parentProjectId;
+    private String masterId;
 
     private LocalDateTime createTime;
 

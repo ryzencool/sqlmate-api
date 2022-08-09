@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableQueryReq {
+public class TeamUrlGenerateReq {
 
-    private Integer tableId;
+    private Integer teamId;
 
-    private String tableName;
-
-    private Integer projectId;
+    private Integer userId;
 }

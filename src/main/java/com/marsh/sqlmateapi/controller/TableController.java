@@ -1,12 +1,11 @@
 package com.marsh.sqlmateapi.controller;
 
+import com.marsh.sqlmateapi.controller.request.TableEditReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
 import com.marsh.sqlmateapi.domain.TableInfo;
 import com.marsh.sqlmateapi.service.TableService;
 import com.marsh.zutils.entity.BaseResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +30,22 @@ public class TableController {
     }
 
 
+    @GetMapping("/get")
+    public BaseResponse<TableInfo> getTable(TableQueryReq req) {
+        return BaseResponse.success(tableService.getTable(req.getTableId()));
+    }
 
+    @PostMapping("/update")
+    public BaseResponse<Object> updateTable(@RequestBody TableEditReq req) {
+        tableService.updateTable(req);
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/create")
+    public BaseResponse<Object> createTable(@RequestBody TableEditReq req) {
+
+        tableService.createTable(req);
+        return BaseResponse.success();
+    }
 
 }

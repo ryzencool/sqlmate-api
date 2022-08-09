@@ -1,9 +1,11 @@
 package com.marsh.sqlmateapi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.marsh.sqlmateapi.controller.request.TableEditReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
 import com.marsh.sqlmateapi.domain.TableInfo;
 import com.marsh.sqlmateapi.mapper.TableInfoMapper;
+import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,5 +32,15 @@ public class TableService {
 
     public Object listAll(TableQueryReq req) {
         return null;
+    }
+
+    public void updateTable(TableEditReq req) {
+        var table  = BeanUtil.transfer(req, TableInfo.class);
+        tableInfoMapper.updateById(table);
+    }
+
+    public void createTable(TableEditReq req) {
+        var table = BeanUtil.transfer(req, TableInfo.class);
+        tableInfoMapper.insert(table);
     }
 }
