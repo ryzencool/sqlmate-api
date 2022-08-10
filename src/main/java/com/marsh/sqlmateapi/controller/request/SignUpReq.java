@@ -9,11 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectQueryReq {
+public class SignUpReq {
 
-    private String name;
+    private String phone;
 
-    private Integer userId;
+    private String password;
+
+    private String code;
+
+    private String email;
 
 
 }

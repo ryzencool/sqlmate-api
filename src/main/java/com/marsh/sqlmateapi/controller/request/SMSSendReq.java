@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectQueryReq {
+public class SMSSendReq {
 
-    private String name;
-
-    private Integer userId;
+    private String phone;
 
 
 }

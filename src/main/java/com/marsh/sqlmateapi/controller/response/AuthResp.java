@@ -1,4 +1,4 @@
-package com.marsh.sqlmateapi.controller.request;
+package com.marsh.sqlmateapi.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectQueryReq {
+public class AuthResp {
 
-    private String name;
-
-    private Integer userId;
-
-
+    private String token;
 }

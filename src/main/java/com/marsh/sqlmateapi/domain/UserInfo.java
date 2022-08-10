@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class UserInfo {
 
     @TableId
     private Integer id;
@@ -24,6 +24,19 @@ public class User {
     private String password;
 
     private String phone;
+
+    /**
+     * 等级 0 无会员
+     * 等级 1 会员
+     * 等级 2 会员
+     * 等级 3 会员
+     */
+    private Integer level;
+
+    private String token;
+
+    private LocalDateTime expiredTime;
+
 
     private LocalDateTime createTime;
 

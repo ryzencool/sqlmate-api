@@ -26,6 +26,8 @@ public class CodeTemplate {
 
     private Integer projectId;
 
+    private String transferFn;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

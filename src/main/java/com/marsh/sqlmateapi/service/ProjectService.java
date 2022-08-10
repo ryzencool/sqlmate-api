@@ -43,7 +43,7 @@ public class ProjectService {
     }
 
     public List<ProjectInfo> listProject(ProjectQueryReq req) {
-        return null;
+        return projectInfoMapper.selectList(new QueryWrapper<ProjectInfo>().lambda().eq(req.getUserId() != null, ProjectInfo::getOwnerId, req.getUserId()));
     }
 
     public ProjectStatResp getProject(Integer projectId) {

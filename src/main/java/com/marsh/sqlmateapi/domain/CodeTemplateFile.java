@@ -19,7 +19,6 @@ public class CodeTemplateFile {
 
     private Integer templateId;
 
-    private String transferFn;
 
     private String fileName;
 

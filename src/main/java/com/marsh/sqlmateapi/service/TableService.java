@@ -22,7 +22,7 @@ public class TableService {
     public List<TableInfo> listTable(TableQueryReq req) {
         return tableInfoMapper.selectList(new QueryWrapper<TableInfo>()
                 .lambda()
-                .eq(req.getTableName() != null, TableInfo::getName, req.getTableName())
+                .like(req.getTableName() != null, TableInfo::getName, req.getTableName())
                 .eq(req.getProjectId() != null, TableInfo::getProjectId, req.getProjectId()));
     }
 

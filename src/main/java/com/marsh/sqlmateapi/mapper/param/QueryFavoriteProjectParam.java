@@ -1,4 +1,4 @@
-package com.marsh.sqlmateapi.controller.request;
+package com.marsh.sqlmateapi.mapper.param;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectQueryReq {
-
-    private String name;
+public class QueryFavoriteProjectParam {
 
     private Integer userId;
-
-
 }
