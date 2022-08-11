@@ -15,3 +15,9 @@ mybatis-plus:
       id-type: auto
   type-handlers-package: com.marsh.mpext.common
   mapper-locations: classpath*:/repository/*.xml
+
+
+jwt:
+  alg: HS256
+  secret: zmy1234
+  issuer: sqlmate

@@ -3,6 +3,7 @@ package com.marsh.sqlmateapi.controller;
 import com.marsh.sqlmateapi.mapper.param.QueryFavoriteProjectParam;
 import com.marsh.sqlmateapi.mapper.result.FavoriteProjectDetail;
 import com.marsh.sqlmateapi.service.FavoriteProjectService;
+import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class FavoriteProjectController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<FavoriteProjectDetail>> listProject(QueryFavoriteProjectParam req) {
+    public BaseResponse<List<FavoriteProjectDetail>> listProject(QueryFavoriteProjectParam req, UserIdentity user) {
         return BaseResponse.success(favoriteProjectService.listProject(req));
     }
 }

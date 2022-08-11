@@ -1,19 +1,19 @@
-package com.marsh.sqlmateapi.controller.response;
+package com.marsh.sqlmateapi.mapper.param;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthResp {
+public class UserInfoGetParam {
 
-    private long expiredTime;
+    private Integer id;
 
-    private String token;
+    private String phone;
+
+    private String email;
 }
