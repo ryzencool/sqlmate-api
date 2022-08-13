@@ -9,15 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateFileEditReq {
+public class TeamUserQueryReq {
 
-    private Integer id;
+    private Integer teamId;
 
-    private Integer templateId;
 
-    private String fileName;
-
-    private String fileType;
-
-    private String content;
 }

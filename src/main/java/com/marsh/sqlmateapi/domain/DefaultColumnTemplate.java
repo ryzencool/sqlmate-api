@@ -1,8 +1,6 @@
 package com.marsh.sqlmateapi.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.marsh.mpext.common.StringArrayTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,23 +12,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FavoriteProject {
+public class DefaultColumnTemplate {
 
     @TableId
     private Integer id;
 
-    private Integer userId;
+    private String name;
 
-    private Integer projectId;
+    private String note;
 
-    @TableField(typeHandler = StringArrayTypeHandler.class)
-    private String[] tags;
-
-    private Integer openCount;
-
-    private Integer collectCount;
-
-    private Integer cloneCount;
+    private Integer ownerId;
 
     private LocalDateTime createTime;
 

@@ -21,6 +21,7 @@ public class TeamUser {
 
     private Integer userId;
 
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

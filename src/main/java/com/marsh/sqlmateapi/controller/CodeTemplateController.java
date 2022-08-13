@@ -7,6 +7,7 @@ import com.marsh.sqlmateapi.controller.request.TemplateQueryReq;
 import com.marsh.sqlmateapi.domain.CodeTemplate;
 import com.marsh.sqlmateapi.domain.CodeTemplateFile;
 import com.marsh.sqlmateapi.service.CodeTemplateService;
+import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,12 @@ public class CodeTemplateController {
         return BaseResponse.success();
     }
 
+    @PostMapping("/update")
+    public BaseResponse<Object> updateTemplate(@RequestBody CodeTemplateEditReq req, UserIdentity identity) {
+        codeTemplateService.updateTemplate(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
     @PostMapping("/file/add")
     public BaseResponse<Object> addFile(@RequestBody CodeTemplateFileEditReq req) {
         codeTemplateService.addFile(req);
@@ -53,4 +60,11 @@ public class CodeTemplateController {
     public BaseResponse<List<CodeTemplateFile>> getTemplateFile(CodeTemplateFileQueryReq req) {
         return BaseResponse.success(codeTemplateService.getFile(req));
     }
+
+    @PostMapping("/file/update")
+    public BaseResponse<Object> updateTemplateFile(@RequestBody CodeTemplateFileEditReq req, UserIdentity identity) {
+        codeTemplateService.updateFile(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
 }

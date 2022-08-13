@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.marsh.sqlmateapi.mapper.TeamUserMapper">
+
+    <select id="listUser" resultType="com.marsh.sqlmateapi.mapper.result.TeamUserResult">
+        select t1.user_id as user_id, t1.team_id as team_id, t2.username as username, t2.level as level, t2.email as email,
+               t1.create_time as join_time
+        from team_user t1
+                 left join user_info t2 on t1.user_id = t2.id
+        where t1.team_id = #{teamId}
+    </select>
+
+</mapper>

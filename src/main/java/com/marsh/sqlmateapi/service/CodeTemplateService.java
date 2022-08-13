@@ -40,8 +40,10 @@ public class CodeTemplateService {
         codeTemplateMapper.insert(tpl);
     }
 
-    public void updateTemplate(CodeTemplateEditReq req) {
+    public void updateTemplate(CodeTemplateEditReq req, Integer userId) {
         var tpl = BeanUtil.transfer(req, CodeTemplate.class);
+        codeTemplateMapper.updateById(tpl);
+
     }
 
     public void addFile(CodeTemplateFileEditReq req) {
@@ -57,5 +59,10 @@ public class CodeTemplateService {
 
     public List<CodeTemplateFile> getFile(CodeTemplateFileQueryReq req) {
         return codeTemplateFileMapper.selectList(new QueryWrapper<CodeTemplateFile>().lambda().eq(CodeTemplateFile::getTemplateId, req.getTemplateId()));
+    }
+
+    public void updateFile(CodeTemplateFileEditReq req, Integer userId) {
+        var file = BeanUtil.transfer(req, CodeTemplateFile.class);
+         codeTemplateFileMapper.updateById(file);
     }
 }

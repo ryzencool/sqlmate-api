@@ -7,6 +7,7 @@ import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
 import com.marsh.sqlmateapi.domain.ProjectInfo;
 import com.marsh.sqlmateapi.service.ProjectService;
+import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.entity.BaseResponse;
 import com.marsh.zutils.entity.PageResponse;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ public class ProjectController {
     }
 
     @PostMapping("/add")
-    public BaseResponse<Void> addProject(@RequestBody AddProjectReq req) {
-        projectService.AddProject(req);
+    public BaseResponse<Void> addProject(@RequestBody AddProjectReq req, UserIdentity identity) {
+        projectService.AddProject(req, identity.getUserId());
         return BaseResponse.success();
     }
 
@@ -33,6 +34,12 @@ public class ProjectController {
     public BaseResponse<List<ProjectInfo>> listProject(ProjectQueryReq req) {
        return BaseResponse.success( projectService.listProject(req));
     }
+
+    @GetMapping("/my/list")
+    public BaseResponse<List<ProjectInfo>> listFavoriteProject(ProjectQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(projectService.listFavoriteProject(req, identity.getUserId()));
+    }
+
 
     @GetMapping("/public/page")
     public BaseResponse<PageResponse<ProjectInfo>> pagePublic(PublicProjectQueryReq req) {

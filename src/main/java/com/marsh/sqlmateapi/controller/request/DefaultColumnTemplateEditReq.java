@@ -9,15 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateFileEditReq {
+public class DefaultColumnTemplateEditReq {
 
-    private Integer id;
+    private String name;
 
-    private Integer templateId;
-
-    private String fileName;
-
-    private String fileType;
-
-    private String content;
+    private String note;
 }

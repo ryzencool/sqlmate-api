@@ -1,12 +1,12 @@
 package com.marsh.sqlmateapi.controller;
 
+import com.marsh.sqlmateapi.controller.request.TableIndexEditReq;
 import com.marsh.sqlmateapi.controller.request.TableIndexQueryReq;
 import com.marsh.sqlmateapi.domain.TableIndex;
 import com.marsh.sqlmateapi.service.TableIndexService;
+import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.entity.BaseResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +23,24 @@ public class TableIndexController {
     @GetMapping("/list")
     public BaseResponse<List<TableIndex>> listIndex(TableIndexQueryReq req) {
         return BaseResponse.success(tableIndexService.listIndex(req));
+    }
+
+    @PostMapping("/update")
+    public BaseResponse<Object> updateIndex(@RequestBody TableIndexEditReq req, UserIdentity identity) {
+        tableIndexService.updateIndex(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/add")
+    public BaseResponse<Object> addIndex(@RequestBody TableIndexEditReq req, UserIdentity identity) {
+        tableIndexService.addIndex(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/delete")
+    public BaseResponse<Object> deleteIndex(TableIndexEditReq req, UserIdentity identity) {
+        tableIndexService.deleteIndex(req, identity);
+        return BaseResponse.success();
     }
 
 }

@@ -1,12 +1,10 @@
 package com.marsh.sqlmateapi.controller;
 
-import com.marsh.sqlmateapi.controller.request.TeamEditReq;
-import com.marsh.sqlmateapi.controller.request.TeamJoinReq;
-import com.marsh.sqlmateapi.controller.request.TeamQueryReq;
-import com.marsh.sqlmateapi.controller.request.TeamUrlGenerateReq;
+import com.marsh.sqlmateapi.controller.request.*;
 import com.marsh.sqlmateapi.domain.TeamInfo;
-import com.marsh.sqlmateapi.domain.TeamUser;
+import com.marsh.sqlmateapi.mapper.result.TeamUserResult;
 import com.marsh.sqlmateapi.service.TeamService;
+import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +26,8 @@ public class TeamController {
     }
 
     @GetMapping("/member/list")
-    public BaseResponse<List<TeamUser>> listMember(TeamQueryReq req) {
-        return BaseResponse.success(teamService.listTeamMember(req));
+    public BaseResponse<List<TeamUserResult>> listMember(TeamUserQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(teamService.listTeamMember(req, identity.getUserId()));
     }
 
     @PostMapping("/add")

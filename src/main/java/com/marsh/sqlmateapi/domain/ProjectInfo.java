@@ -23,7 +23,7 @@ public class ProjectInfo {
 
     private String dbType;
 
-    private String ownerId;
+    private Integer ownerId;
 
     private Integer parentProjectId;
 

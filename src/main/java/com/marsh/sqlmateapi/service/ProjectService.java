@@ -36,8 +36,9 @@ public class ProjectService {
         this.tableColumnMapper = tableColumnMapper;
     }
 
-    public void AddProject(AddProjectReq req) {
+    public void AddProject(AddProjectReq req, Integer userId) {
         var project = BeanUtil.transfer(req, ProjectInfo.class);
+        project.setOwnerId(userId);
         projectInfoMapper.insert(project);
 
     }
@@ -59,5 +60,9 @@ public class ProjectService {
 
     public Page<ProjectInfo> pagePublic(PublicProjectQueryReq req) {
         return projectInfoMapper.selectPage(req.page(), new QueryWrapper<ProjectInfo>().lambda().like(req.getName() != null ,ProjectInfo::getName, req.getName()));
+    }
+
+    public List<ProjectInfo> listFavoriteProject(ProjectQueryReq req, Integer userId) {
+        return projectInfoMapper.selectList(new QueryWrapper<ProjectInfo>().lambda().eq(ProjectInfo::getOwnerId, userId));
     }
 }

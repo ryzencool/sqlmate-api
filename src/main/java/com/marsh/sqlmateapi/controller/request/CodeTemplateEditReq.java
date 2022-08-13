@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CodeTemplateEditReq {
 
+    private Integer id;
+
     private String name;
 
     private String lang;
 
     private Integer projectId;
+
+    private String transferFn;
 }

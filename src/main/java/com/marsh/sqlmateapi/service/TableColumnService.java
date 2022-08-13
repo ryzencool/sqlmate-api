@@ -8,6 +8,7 @@ import com.marsh.sqlmateapi.mapper.TableColumnMapper;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -32,5 +33,10 @@ public class TableColumnService {
     public void addColumn(ColumnUpdateReq req) {
         var col = BeanUtil.transfer(req, TableColumn.class);
         tableColumnMapper.insert(col);
+    }
+
+    public void delColumns(Integer[] columnIds, Integer userId) {
+        Arrays.stream(columnIds).forEach(tableColumnMapper::deleteById);
+
     }
 }

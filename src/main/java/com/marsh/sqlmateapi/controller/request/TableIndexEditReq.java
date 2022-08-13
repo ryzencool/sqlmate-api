@@ -9,15 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeTemplateFileEditReq {
+public class TableIndexEditReq {
 
     private Integer id;
 
-    private Integer templateId;
+    private Integer tableId;
 
-    private String fileName;
+    private String name;
 
-    private String fileType;
-
-    private String content;
+    private String type;
 }
