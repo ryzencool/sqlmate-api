@@ -1,5 +1,6 @@
 package com.marsh.sqlmateapi.controller;
 
+import com.marsh.sqlmateapi.controller.request.TableIndexDelReq;
 import com.marsh.sqlmateapi.controller.request.TableIndexEditReq;
 import com.marsh.sqlmateapi.controller.request.TableIndexQueryReq;
 import com.marsh.sqlmateapi.domain.TableIndex;
@@ -38,7 +39,7 @@ public class TableIndexController {
     }
 
     @PostMapping("/delete")
-    public BaseResponse<Object> deleteIndex(TableIndexEditReq req, UserIdentity identity) {
+    public BaseResponse<Object> deleteIndex(@RequestBody TableIndexDelReq req, UserIdentity identity) {
         tableIndexService.deleteIndex(req, identity);
         return BaseResponse.success();
     }

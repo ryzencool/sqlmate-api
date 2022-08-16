@@ -9,15 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableEditReq {
+public class ExecuteSqlReq {
 
-    private Integer id;
-
-    private String name;
-
-    private String note;
-
-    private String comment;
-
-    private Integer projectId;
+    private String sql;
 }

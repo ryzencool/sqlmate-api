@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectSqlAddReq {
+public class ProjectSqlDeleteReq {
 
-    private Integer projectId;
-
-    private String name;
-
-    private String sql;
+    private Integer id;
 }

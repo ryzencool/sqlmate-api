@@ -23,7 +23,8 @@ public class TableService {
         return tableInfoMapper.selectList(new QueryWrapper<TableInfo>()
                 .lambda()
                 .like(req.getTableName() != null, TableInfo::getName, req.getTableName())
-                .eq(req.getProjectId() != null, TableInfo::getProjectId, req.getProjectId()));
+                .eq(req.getProjectId() != null, TableInfo::getProjectId, req.getProjectId())
+                .orderByDesc(true, TableInfo::getCreateTime));
     }
 
     public TableInfo getTable(Integer tableId) {
@@ -35,7 +36,7 @@ public class TableService {
     }
 
     public void updateTable(TableEditReq req) {
-        var table  = BeanUtil.transfer(req, TableInfo.class);
+        var table = BeanUtil.transfer(req, TableInfo.class);
         tableInfoMapper.updateById(table);
     }
 

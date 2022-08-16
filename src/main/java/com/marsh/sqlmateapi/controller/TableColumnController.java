@@ -45,6 +45,11 @@ public class TableColumnController {
         return BaseResponse.success();
     }
 
+    @PostMapping("/update")
+    public BaseResponse<Object> updateColumn(@RequestBody ColumnUpdateReq req, UserIdentity identity) {
+        tableColumnService.updateColumn(req, identity.getUserId());
+        return BaseResponse.success();
+    }
 
 
 }

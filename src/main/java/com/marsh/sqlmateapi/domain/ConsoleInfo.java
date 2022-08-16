@@ -1,8 +1,6 @@
 package com.marsh.sqlmateapi.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.marsh.mpext.common.StringArrayTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,18 +12,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableIndex {
+public class ConsoleInfo {
 
     @TableId
     private Integer id;
 
-    private String name;
+    private String code;
 
-    private Integer tableId;
-
-    private String type;
-
-    private String columns;
+    private Integer projectId;
 
     private LocalDateTime createTime;
 

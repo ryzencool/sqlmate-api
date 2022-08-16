@@ -39,4 +39,9 @@ public class TableColumnService {
         Arrays.stream(columnIds).forEach(tableColumnMapper::deleteById);
 
     }
+
+    public void updateColumn(ColumnUpdateReq req, Integer userId) {
+        var column = BeanUtil.transfer(req, TableColumn.class);
+        tableColumnMapper.updateById(column);
+    }
 }

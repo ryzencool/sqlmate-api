@@ -15,6 +15,8 @@ public class TableIndexEditReq {
 
     private Integer tableId;
 
+    private String columns;
+
     private String name;
 
     private String type;

@@ -9,15 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableEditReq {
+public class ProjectSqlEditReq {
 
     private Integer id;
+    private Integer projectId;
 
     private String name;
 
-    private String note;
-
-    private String comment;
-
-    private Integer projectId;
+    private String sql;
 }

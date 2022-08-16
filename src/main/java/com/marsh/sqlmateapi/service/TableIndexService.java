@@ -1,6 +1,7 @@
 package com.marsh.sqlmateapi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.marsh.sqlmateapi.controller.request.TableIndexDelReq;
 import com.marsh.sqlmateapi.controller.request.TableIndexEditReq;
 import com.marsh.sqlmateapi.controller.request.TableIndexQueryReq;
 import com.marsh.sqlmateapi.domain.TableIndex;
@@ -9,6 +10,7 @@ import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -36,7 +38,7 @@ public class TableIndexService {
         tableIndexMapper.insert(index);
     }
 
-    public void deleteIndex(TableIndexEditReq req, UserIdentity identity) {
-        tableIndexMapper.deleteById(req.getId());
+    public void deleteIndex(TableIndexDelReq req, UserIdentity identity) {
+        Arrays.stream(req.getIndexesId()).forEach(tableIndexMapper::deleteById);
     }
 }

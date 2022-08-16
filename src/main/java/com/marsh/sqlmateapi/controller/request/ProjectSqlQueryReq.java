@@ -13,5 +13,5 @@ public class ProjectSqlQueryReq {
 
     private Integer projectId;
 
-    private String note;
+    private String condition;
 }
