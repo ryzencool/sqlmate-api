@@ -4,4 +4,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.marsh.sqlmateapi.domain.TableInfo;
 
 public interface TableInfoMapper extends BaseMapper<TableInfo> {
+
 }

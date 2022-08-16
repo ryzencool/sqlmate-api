@@ -17,14 +17,13 @@ public class TableRel {
     @TableId
     private Integer id;
 
-    private Integer tableAId;
+    private Integer leftTableId;
 
-    private Integer tableBId;
+    private Integer rightTableId;
 
-    private Integer columnAId;
+    private Long leftColumnId;
 
-    private Integer columnBId;
-
+    private Long rightColumnId;
     /**
      * 一对多
      */
