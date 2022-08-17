@@ -17,6 +17,8 @@ public class TableRel {
     @TableId
     private Integer id;
 
+    private Integer projectId;
+
     private Integer leftTableId;
 
     private Integer rightTableId;

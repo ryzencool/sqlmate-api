@@ -4,6 +4,7 @@ import com.marsh.sqlmateapi.controller.request.TableEditReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
 import com.marsh.sqlmateapi.domain.TableInfo;
 import com.marsh.sqlmateapi.service.TableService;
+import com.marsh.sqlmateapi.service.dto.TableWithColumnsDto;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class TableController {
     }
 
     @GetMapping("/listAll")
-    public BaseResponse<Object> listAll(TableQueryReq req) {
+    public BaseResponse<List<TableWithColumnsDto>> listAll(TableQueryReq req) {
         return BaseResponse.success(tableService.listAll(req));
     }
 
