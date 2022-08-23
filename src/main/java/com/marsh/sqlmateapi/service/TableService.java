@@ -7,6 +7,7 @@ import com.marsh.sqlmateapi.domain.TableInfo;
 import com.marsh.sqlmateapi.mapper.TableColumnMapper;
 import com.marsh.sqlmateapi.mapper.TableInfoMapper;
 import com.marsh.sqlmateapi.mapper.TableRelMapper;
+import com.marsh.sqlmateapi.mapper.param.TableDetailParam;
 import com.marsh.sqlmateapi.mapper.result.TableDetailResult;
 import com.marsh.sqlmateapi.service.dto.ColumnSimpleDto;
 import com.marsh.sqlmateapi.service.dto.TableSimpleDto;
@@ -45,7 +46,9 @@ public class TableService {
     }
 
     public List<TableWithColumnsDto> listAll(TableQueryReq req) {
-        var columns = tableColumnMapper.listProjectColumns(req.getProjectId());
+        var columns = tableColumnMapper.listProjectColumns(TableDetailParam.builder()
+                .projectId(req.getProjectId())
+                .build());
 
         var columnGroup = columns.stream().collect(Collectors.groupingBy(TableDetailResult::getTableId)).entrySet().stream().map(obj -> {
             var firstObj = obj.getValue().get(0);
@@ -63,8 +66,6 @@ public class TableService {
                     .title(tableName)
                     .build();
         }).collect(Collectors.toList());
-
-
 
 
         return columnGroup;

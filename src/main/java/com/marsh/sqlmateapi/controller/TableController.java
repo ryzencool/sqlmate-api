@@ -30,6 +30,7 @@ public class TableController {
         return BaseResponse.success(tableService.listAll(req));
     }
 
+    // 表从那几个构建 ，然后认清关系，所有的都是去先构建1
 
     @GetMapping("/get")
     public BaseResponse<TableInfo> getTable(TableQueryReq req) {
