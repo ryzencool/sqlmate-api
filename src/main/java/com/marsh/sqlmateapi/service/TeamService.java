@@ -36,7 +36,7 @@ public class TeamService {
 
     }
 
-    public void addTeam(TeamEditReq req) {
+    public void addTeam(TeamEditReq req, Integer userId) {
         var team = BeanUtil.transfer(req, TeamInfo.class);
         teamInfoMapper.insert(team);
     }

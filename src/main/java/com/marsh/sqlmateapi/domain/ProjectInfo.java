@@ -1,6 +1,9 @@
 package com.marsh.sqlmateapi.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.marsh.mpext.common.IntArrayTypeHandler;
+import com.marsh.mpext.common.StringArrayTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +24,19 @@ public class ProjectInfo {
 
     private String note;
 
-    private String dbType;
+    private Integer dbType;
 
     private Integer ownerId;
+
+    @TableField(typeHandler = IntArrayTypeHandler.class)
+    private Integer[] teamIds;
+
+    @TableField(typeHandler = StringArrayTypeHandler.class)
+    private String[] tags;
+
+    private Boolean isPublic;
+
+    private Integer defaultColumnTemplateId;
 
     private Integer parentProjectId;
 

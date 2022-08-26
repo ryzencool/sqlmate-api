@@ -31,8 +31,8 @@ public class TeamController {
     }
 
     @PostMapping("/add")
-    public BaseResponse<Object> addTeam(@RequestBody TeamEditReq req) {
-        teamService.addTeam(req);
+    public BaseResponse<Object> addTeam(@RequestBody TeamEditReq req, UserIdentity identity) {
+        teamService.addTeam(req , identity.getUserId());
         return BaseResponse.success();
     }
 

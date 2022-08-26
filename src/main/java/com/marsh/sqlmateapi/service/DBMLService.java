@@ -49,9 +49,7 @@ public class DBMLService {
         var lineTable = String.format("Table %s {\n", table.getName());
         dbml.append(lineTable);
 
-        if (StringUtils.isNotEmpty(table.getNote())) {
-            dbml.append(String.format("\t Note: '%s'\n", table.getNote()));
-        }
+
         for (var col : tableColumns) {
             var lineCol = String.format("\t %s %s ", col.getName(), col.getType());
             var extend = new ArrayList<String>();
@@ -94,6 +92,9 @@ public class DBMLService {
             }
 
             dbml.append(lineCol);
+        }
+        if (StringUtils.isNotEmpty(table.getNote())) {
+            dbml.append(String.format("\n\t Note: '%s'\n", table.getNote()));
         }
         dbml.append("}");
         return dbml.toString();

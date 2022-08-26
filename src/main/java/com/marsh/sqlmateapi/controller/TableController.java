@@ -45,7 +45,6 @@ public class TableController {
 
     @PostMapping("/create")
     public BaseResponse<Object> createTable(@RequestBody TableEditReq req) {
-
         tableService.createTable(req);
         return BaseResponse.success();
     }

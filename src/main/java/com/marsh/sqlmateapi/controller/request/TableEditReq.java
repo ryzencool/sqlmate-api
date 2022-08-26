@@ -17,6 +17,8 @@ public class TableEditReq {
 
     private String note;
 
+    private Integer defaultColumnTemplateId;
+
     private String comment;
 
     private Integer projectId;

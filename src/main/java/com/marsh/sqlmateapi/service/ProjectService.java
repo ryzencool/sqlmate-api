@@ -3,6 +3,7 @@ package com.marsh.sqlmateapi.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.marsh.sqlmateapi.controller.request.AddProjectReq;
+import com.marsh.sqlmateapi.controller.request.ProjectEditReq;
 import com.marsh.sqlmateapi.controller.request.ProjectQueryReq;
 import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
@@ -47,7 +48,11 @@ public class ProjectService {
         return projectInfoMapper.selectList(new QueryWrapper<ProjectInfo>().lambda().eq(req.getUserId() != null, ProjectInfo::getOwnerId, req.getUserId()));
     }
 
-    public ProjectStatResp getProject(Integer projectId) {
+    public ProjectInfo getProject(ProjectQueryReq req) {
+        return projectInfoMapper.selectOne(new QueryWrapper<ProjectInfo>().lambda().eq(ProjectInfo::getId, req.getId()));
+    }
+
+    public ProjectStatResp getProjectDetail(Integer projectId) {
         var project = projectInfoMapper.selectById(projectId);
         var sqlCount = projectSqlMapper.selectCount(new QueryWrapper<ProjectSql>()
                 .lambda().eq(ProjectSql::getProjectId, projectId));
@@ -59,10 +64,18 @@ public class ProjectService {
     }
 
     public Page<ProjectInfo> pagePublic(PublicProjectQueryReq req) {
-        return projectInfoMapper.selectPage(req.page(), new QueryWrapper<ProjectInfo>().lambda().like(req.getName() != null ,ProjectInfo::getName, req.getName()));
+        return projectInfoMapper.selectPage(req.page(), new QueryWrapper<ProjectInfo>()
+                .lambda()
+                .eq(ProjectInfo::getIsPublic, true)
+                .like(req.getName() != null, ProjectInfo::getName, req.getName()));
     }
 
     public List<ProjectInfo> listFavoriteProject(ProjectQueryReq req, Integer userId) {
         return projectInfoMapper.selectList(new QueryWrapper<ProjectInfo>().lambda().eq(ProjectInfo::getOwnerId, userId));
+    }
+
+    public void updateProject(ProjectEditReq req, Integer userId) {
+        var project = BeanUtil.transfer(req, ProjectInfo.class);
+        projectInfoMapper.updateById(project);
     }
 }

@@ -9,13 +9,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectQueryReq {
+public class ProjectEditReq {
 
     private Integer id;
 
     private String name;
 
-    private Integer userId;
+    private String note;
+
+    private Integer dbType;
+
+    private Integer[] teamIds;
+
+    private String[] tags;
+
+    private Integer defaultColumnTemplateId;
 
 
 }

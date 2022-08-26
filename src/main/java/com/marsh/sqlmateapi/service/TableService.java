@@ -3,10 +3,10 @@ package com.marsh.sqlmateapi.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.marsh.sqlmateapi.controller.request.TableEditReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
+import com.marsh.sqlmateapi.domain.DefaultColumnDetail;
+import com.marsh.sqlmateapi.domain.TableColumn;
 import com.marsh.sqlmateapi.domain.TableInfo;
-import com.marsh.sqlmateapi.mapper.TableColumnMapper;
-import com.marsh.sqlmateapi.mapper.TableInfoMapper;
-import com.marsh.sqlmateapi.mapper.TableRelMapper;
+import com.marsh.sqlmateapi.mapper.*;
 import com.marsh.sqlmateapi.mapper.param.TableDetailParam;
 import com.marsh.sqlmateapi.mapper.result.TableDetailResult;
 import com.marsh.sqlmateapi.service.dto.ColumnSimpleDto;
@@ -27,10 +27,13 @@ public class TableService {
 
     private final TableColumnMapper tableColumnMapper;
 
-    public TableService(TableInfoMapper tableInfoMapper, TableRelMapper tableRelMapper, TableColumnMapper tableColumnMapper) {
+    private final DefaultColumnDetailMapper defaultColumnTemplateMapper;
+
+    public TableService(TableInfoMapper tableInfoMapper, TableRelMapper tableRelMapper, TableColumnMapper tableColumnMapper, DefaultColumnDetailMapper defaultColumnTemplateMapper) {
         this.tableInfoMapper = tableInfoMapper;
         this.tableRelMapper = tableRelMapper;
         this.tableColumnMapper = tableColumnMapper;
+        this.defaultColumnTemplateMapper = defaultColumnTemplateMapper;
     }
 
     public List<TableInfo> listTable(TableQueryReq req) {
@@ -78,6 +81,30 @@ public class TableService {
 
     public void createTable(TableEditReq req) {
         var table = BeanUtil.transfer(req, TableInfo.class);
-        tableInfoMapper.insert(table);
+        var tableId = tableInfoMapper.insertReturnId(table);
+
+
+        // 创建预设字段
+        if (req.getDefaultColumnTemplateId() != null || req.getDefaultColumnTemplateId() == 0) {
+
+            var columnList = defaultColumnTemplateMapper.selectList(new QueryWrapper<DefaultColumnDetail>()
+                    .lambda()
+                    .eq(DefaultColumnDetail::getTemplateId, req.getDefaultColumnTemplateId()));
+            for (DefaultColumnDetail detail : columnList) {
+                var newColumn = TableColumn.builder()
+                        .comment(detail.getComment())
+                        .note(detail.getNote())
+                        .name(detail.getName())
+                        .type(detail.getType())
+                        .isAutoIncrement(detail.getIsAutoIncrement())
+                        .isNull(detail.getIsNull())
+                        .defaultValue(detail.getDefaultValue())
+                        .isPrimaryKey(detail.getIsPrimaryKey())
+                        .isUniqueKey(detail.getIsUniqueKey())
+                        .tableId(tableId)
+                        .build();
+                tableColumnMapper.insert(newColumn);
+            }
+        }
     }
 }

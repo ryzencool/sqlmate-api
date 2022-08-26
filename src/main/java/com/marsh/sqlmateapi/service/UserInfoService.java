@@ -3,6 +3,7 @@ package com.marsh.sqlmateapi.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.marsh.sqlmateapi.controller.request.SignInReq;
 import com.marsh.sqlmateapi.controller.request.SignUpReq;
+import com.marsh.sqlmateapi.controller.request.TeamEditReq;
 import com.marsh.sqlmateapi.controller.response.AuthResp;
 import com.marsh.sqlmateapi.domain.UserInfo;
 import com.marsh.sqlmateapi.exception.ErrorCode;
@@ -15,6 +16,7 @@ import com.marsh.zutils.helper.JwtHelper;
 import com.marsh.zutils.util.DateUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -28,12 +30,16 @@ public class UserInfoService {
 
     private final SignUpCodeMapper signUpCodeMapper;
 
-    public UserInfoService(UserInfoMapper userInfoMapper, JwtHelper jwtHelper, SignUpCodeMapper signUpCodeMapper) {
+    private final TeamService teamService;
+
+    public UserInfoService(UserInfoMapper userInfoMapper, JwtHelper jwtHelper, SignUpCodeMapper signUpCodeMapper, TeamService teamService) {
         this.userInfoMapper = userInfoMapper;
         this.jwtHelper = jwtHelper;
         this.signUpCodeMapper = signUpCodeMapper;
+        this.teamService = teamService;
     }
 
+    @Transactional
     public AuthResp signUp(SignUpReq req) {
 //        var codeObj = signUpCodeMapper.selectOne(new QueryWrapper<SignUpCode>().lambda().eq(SignUpCode::getPhone, req
 //                .getPhone()));
@@ -64,6 +70,11 @@ public class UserInfoService {
         var expiredTime = LocalDateTime.now().plusDays(30);
         userInfo.setExpiredTime(expiredTime);
         userInfoMapper.updateById(userInfo);
+        // 默认团队
+        teamService.addTeam(TeamEditReq.builder()
+                        .masterId(userInfo.getId())
+                        .name("默认团队")
+                .build(), userInfo.getId());
         return AuthResp.builder().token(token).expiredTime(DateUtil.toMilli(expiredTime)).build();
     }
 

@@ -1,9 +1,6 @@
 package com.marsh.sqlmateapi.controller;
 
-import com.marsh.sqlmateapi.controller.request.AddProjectReq;
-import com.marsh.sqlmateapi.controller.request.ProjectDetailQueryReq;
-import com.marsh.sqlmateapi.controller.request.ProjectQueryReq;
-import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
+import com.marsh.sqlmateapi.controller.request.*;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
 import com.marsh.sqlmateapi.domain.ProjectInfo;
 import com.marsh.sqlmateapi.service.ProjectService;
@@ -19,7 +16,6 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
-
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
@@ -27,6 +23,12 @@ public class ProjectController {
     @PostMapping("/add")
     public BaseResponse<Void> addProject(@RequestBody AddProjectReq req, UserIdentity identity) {
         projectService.AddProject(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/update")
+    public BaseResponse<Object> updateProject(@RequestBody  ProjectEditReq req, UserIdentity identity ) {
+        projectService.updateProject(req, identity.getUserId());
         return BaseResponse.success();
     }
 
@@ -45,10 +47,16 @@ public class ProjectController {
     public BaseResponse<PageResponse<ProjectInfo>> pagePublic(PublicProjectQueryReq req) {
         return BaseResponse.success(PageResponse.of(projectService.pagePublic(req)));
     }
-    @GetMapping("/get")
-    public BaseResponse<ProjectStatResp> projectDetail(ProjectDetailQueryReq req) {
-        return BaseResponse.success(projectService.getProject(req.getProjectId()));
+    @GetMapping("/get/detail")
+    public BaseResponse<ProjectStatResp> projectDetail(ProjectDetailQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(projectService.getProjectDetail(req.getProjectId()));
     }
+
+    @GetMapping("/get")
+    public BaseResponse<ProjectInfo> getProject(ProjectQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(projectService.getProject(req));
+    }
+
 
     @PostMapping("/del")
     public void delProject() {
