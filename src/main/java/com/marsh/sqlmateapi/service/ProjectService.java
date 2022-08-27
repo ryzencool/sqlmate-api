@@ -10,12 +10,11 @@ import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
 import com.marsh.sqlmateapi.domain.ProjectInfo;
 import com.marsh.sqlmateapi.domain.ProjectSql;
 import com.marsh.sqlmateapi.domain.TableInfo;
-import com.marsh.sqlmateapi.mapper.ProjectInfoMapper;
-import com.marsh.sqlmateapi.mapper.ProjectSqlMapper;
-import com.marsh.sqlmateapi.mapper.TableColumnMapper;
-import com.marsh.sqlmateapi.mapper.TableInfoMapper;
+import com.marsh.sqlmateapi.mapper.*;
 import com.marsh.zutils.util.BeanUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,17 +29,28 @@ public class ProjectService {
 
     private final TableColumnMapper tableColumnMapper;
 
-    public ProjectService(ProjectInfoMapper projectInfoMapper, ProjectSqlMapper projectSqlMapper, TableInfoMapper tableInfoMapper, TableColumnMapper tableColumnMapper) {
+    private final UserInfoMapper userInfoMapper;
+
+    private final JdbcTemplate jdbcTemplate;
+    public ProjectService(ProjectInfoMapper projectInfoMapper, ProjectSqlMapper projectSqlMapper, TableInfoMapper tableInfoMapper, TableColumnMapper tableColumnMapper, UserInfoMapper userInfoMapper, JdbcTemplate jdbcTemplate) {
         this.projectInfoMapper = projectInfoMapper;
         this.projectSqlMapper = projectSqlMapper;
         this.tableInfoMapper = tableInfoMapper;
         this.tableColumnMapper = tableColumnMapper;
+        this.userInfoMapper = userInfoMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void AddProject(AddProjectReq req, Integer userId) {
+    @Transactional
+    public void addProject(AddProjectReq req, Integer userId) {
         var project = BeanUtil.transfer(req, ProjectInfo.class);
         project.setOwnerId(userId);
         projectInfoMapper.insert(project);
+
+        var user = userInfoMapper.selectById(userId);
+        var projectName = req.getName();
+        var schemaSql = String.format("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION %s", projectName + user.getPhone(), "user_" + user.getPhone());
+        jdbcTemplate.execute(schemaSql);
 
     }
 

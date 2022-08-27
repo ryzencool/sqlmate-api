@@ -14,6 +14,7 @@ import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.exception.BaseBizException;
 import com.marsh.zutils.helper.JwtHelper;
 import com.marsh.zutils.util.DateUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +31,19 @@ public class UserInfoService {
 
     private final SignUpCodeMapper signUpCodeMapper;
 
+    private final JdbcTemplate jdbcTemplate;
+
     private final TeamService teamService;
 
-    public UserInfoService(UserInfoMapper userInfoMapper, JwtHelper jwtHelper, SignUpCodeMapper signUpCodeMapper, TeamService teamService) {
+    public UserInfoService(UserInfoMapper userInfoMapper,
+                           JwtHelper jwtHelper,
+                           SignUpCodeMapper signUpCodeMapper,
+                           JdbcTemplate jdbcTemplate,
+                           TeamService teamService) {
         this.userInfoMapper = userInfoMapper;
         this.jwtHelper = jwtHelper;
         this.signUpCodeMapper = signUpCodeMapper;
+        this.jdbcTemplate = jdbcTemplate;
         this.teamService = teamService;
     }
 
@@ -72,9 +80,12 @@ public class UserInfoService {
         userInfoMapper.updateById(userInfo);
         // 默认团队
         teamService.addTeam(TeamEditReq.builder()
-                        .masterId(userInfo.getId())
-                        .name("默认团队")
+                .masterId(userInfo.getId())
+                .name("默认团队")
                 .build(), userInfo.getId());
+        // 创建schema
+        var sql = "CREATE USER " + " user_" + userInfo.getPhone() + " WITH PASSWORD '123456789'";
+        jdbcTemplate.execute(sql);
         return AuthResp.builder().token(token).expiredTime(DateUtil.toMilli(expiredTime)).build();
     }
 

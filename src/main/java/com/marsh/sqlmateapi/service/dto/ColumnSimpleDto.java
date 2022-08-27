@@ -16,4 +16,14 @@ public class ColumnSimpleDto {
     private String name;
 
     private String type;
+
+    private String defaultValue;
+
+    private Boolean isNull;
+
+    private Boolean isAutoIncrement;
+
+    private Boolean isUniqueKey;
+
+    private Boolean isPrimaryKey;
 }

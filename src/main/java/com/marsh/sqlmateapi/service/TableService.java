@@ -53,7 +53,8 @@ public class TableService {
                 .projectId(req.getProjectId())
                 .build());
 
-        var columnGroup = columns.stream().collect(Collectors.groupingBy(TableDetailResult::getTableId)).entrySet().stream().map(obj -> {
+        var columnGroup = columns.stream()
+                .collect(Collectors.groupingBy(TableDetailResult::getTableId)).entrySet().stream().map(obj -> {
             var firstObj = obj.getValue().get(0);
             var tableId = obj.getKey();
             var tableName = firstObj.getTableName();
@@ -62,6 +63,10 @@ public class TableService {
                     .id(it.getColumnId())
                     .type(it.getColumnType())
                     .name(it.getColumnName())
+                    .isAutoIncrement(it.getIsAutoIncrement())
+                    .isNull(it.getIsNull())
+                    .isUniqueKey(it.getIsUniqueKey())
+                    .isPrimaryKey(it.getIsPrimaryKey())
                     .build()).collect(Collectors.toList());
             return TableWithColumnsDto.builder()
                     .content(list)

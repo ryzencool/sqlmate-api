@@ -14,9 +14,11 @@ public class FavoriteProjectDetail {
 
     private Integer userId;
 
-    private Integer projectId;
+    private Integer id;
 
-    private String projectName;
+    private String name;
 
-    private String projectNote;
+    private String note;
+
+    private String[] tags;
 }

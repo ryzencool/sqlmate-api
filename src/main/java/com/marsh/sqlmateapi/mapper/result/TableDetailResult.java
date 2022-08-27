@@ -17,6 +17,16 @@ public class TableDetailResult {
 
     private String columnType;
 
+    private String defaultValue;
+
+    private Boolean isAutoIncrement;
+
+    private Boolean isPrimaryKey;
+
+    private Boolean isUniqueKey;
+
+    private Boolean isNull;
+
     private Integer tableId;
 
     private String tableName;

@@ -9,18 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TableEditReq {
-
-    private Integer id;
-
-    private String name;
-
-    private String note;
-
-    private Integer defaultColumnTemplateId;
-
-    private String comment;
-
+public class FavoriteProjectAddReq {
 
     private Integer projectId;
 }

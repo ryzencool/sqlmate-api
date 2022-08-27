@@ -23,6 +23,9 @@ public class ProjectEditReq {
 
     private String[] tags;
 
+    private Boolean isPublic;
+
+
     private Integer defaultColumnTemplateId;
 
 

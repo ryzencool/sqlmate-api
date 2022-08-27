@@ -22,7 +22,7 @@ public class ProjectController {
 
     @PostMapping("/add")
     public BaseResponse<Void> addProject(@RequestBody AddProjectReq req, UserIdentity identity) {
-        projectService.AddProject(req, identity.getUserId());
+        projectService.addProject(req, identity.getUserId());
         return BaseResponse.success();
     }
 

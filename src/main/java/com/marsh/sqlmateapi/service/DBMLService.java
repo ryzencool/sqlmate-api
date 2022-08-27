@@ -57,7 +57,7 @@ public class DBMLService {
                 extend.add(String.format("note : %s", col.getComment()));
             }
             if (StringUtils.isNotEmpty(col.getDefaultValue())) {
-                if (col.getType().startsWith("int")
+                if (col.getType().contains("int")
                     || col.getType().startsWith("float")
                     || col.getType().startsWith("double")
                     || col.getType().startsWith("decimal")
