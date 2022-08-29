@@ -7,11 +7,11 @@ import com.marsh.sqlmateapi.controller.request.ProjectEditReq;
 import com.marsh.sqlmateapi.controller.request.ProjectQueryReq;
 import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
-import com.marsh.sqlmateapi.domain.ProjectInfo;
-import com.marsh.sqlmateapi.domain.ProjectSql;
-import com.marsh.sqlmateapi.domain.TableInfo;
+import com.marsh.sqlmateapi.domain.*;
+import com.marsh.sqlmateapi.helper.RoutingDataSource;
 import com.marsh.sqlmateapi.mapper.*;
 import com.marsh.zutils.util.BeanUtil;
+import com.marsh.zutils.util.UUIDUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,14 +31,25 @@ public class ProjectService {
 
     private final UserInfoMapper userInfoMapper;
 
+    private final ProjectDataSourceMapper projectDataSourceMapper;
+
+    private final DatabaseUserMapper databaseUserMapper;
+
     private final JdbcTemplate jdbcTemplate;
-    public ProjectService(ProjectInfoMapper projectInfoMapper, ProjectSqlMapper projectSqlMapper, TableInfoMapper tableInfoMapper, TableColumnMapper tableColumnMapper, UserInfoMapper userInfoMapper, JdbcTemplate jdbcTemplate) {
+
+    private final RoutingDataSource routingDataSource;
+
+
+    public ProjectService(ProjectInfoMapper projectInfoMapper, ProjectSqlMapper projectSqlMapper, TableInfoMapper tableInfoMapper, TableColumnMapper tableColumnMapper, UserInfoMapper userInfoMapper, ProjectDataSourceMapper projectDataSourceMapper, DatabaseUserMapper databaseUserMapper, JdbcTemplate jdbcTemplate, RoutingDataSource routingDataSource) {
         this.projectInfoMapper = projectInfoMapper;
         this.projectSqlMapper = projectSqlMapper;
         this.tableInfoMapper = tableInfoMapper;
         this.tableColumnMapper = tableColumnMapper;
         this.userInfoMapper = userInfoMapper;
+        this.projectDataSourceMapper = projectDataSourceMapper;
+        this.databaseUserMapper = databaseUserMapper;
         this.jdbcTemplate = jdbcTemplate;
+        this.routingDataSource = routingDataSource;
     }
 
     @Transactional
@@ -47,11 +58,25 @@ public class ProjectService {
         project.setOwnerId(userId);
         projectInfoMapper.insert(project);
 
-        var user = userInfoMapper.selectById(userId);
-        var projectName = req.getName();
-        var schemaSql = String.format("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION %s", projectName + user.getPhone(), "user_" + user.getPhone());
-        jdbcTemplate.execute(schemaSql);
+        var pj = projectInfoMapper.selectOne(new QueryWrapper<ProjectInfo>().lambda().eq(ProjectInfo::getName, req.getName()).eq(ProjectInfo::getOwnerId, userId));
+        var dbs = databaseUserMapper.selectList(new QueryWrapper<DatabaseUser>().lambda().eq(DatabaseUser::getUserId, userId));
+        for (DatabaseUser db : dbs) {
+            if (db.getDbType() == 2) {
+                var dbName = "db_" + UUIDUtil.cleanLowerUUID();
+                var schemaSql = String.format("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION %s", dbName, db.getUsername());
+                var url = String.format("jdbc:postgresql://localhost:55435/sqlmate?currentSchema=%s&useSSL=false", dbName);
+                jdbcTemplate.execute(schemaSql);
+                projectDataSourceMapper.insert(ProjectDataSource.builder()
+                                .projectId(pj.getId())
+                                .dbType(db.getDbType())
+                                .name(dbName)
+                                .password(db.getPassword())
+                                .username(db.getUsername())
+                                .url(url)
+                        .build());
 
+            }
+        }
     }
 
     public List<ProjectInfo> listProject(ProjectQueryReq req) {
@@ -59,7 +84,13 @@ public class ProjectService {
     }
 
     public ProjectInfo getProject(ProjectQueryReq req) {
-        return projectInfoMapper.selectOne(new QueryWrapper<ProjectInfo>().lambda().eq(ProjectInfo::getId, req.getId()));
+        var project = projectInfoMapper.selectOne(new QueryWrapper<ProjectInfo>().lambda().eq(ProjectInfo::getId, req.getId()));
+        var ds = projectDataSourceMapper
+                .selectOne(new QueryWrapper<ProjectDataSource>().lambda()
+                        .eq(ProjectDataSource::getProjectId, req.getId())
+                        .eq(ProjectDataSource::getDbType, 2));
+        routingDataSource.createAndSaveDataSource(ds.getName());
+        return project;
     }
 
     public ProjectStatResp getProjectDetail(Integer projectId) {

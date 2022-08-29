@@ -5,8 +5,10 @@ import com.marsh.sqlmateapi.controller.request.SignInReq;
 import com.marsh.sqlmateapi.controller.request.SignUpReq;
 import com.marsh.sqlmateapi.controller.request.TeamEditReq;
 import com.marsh.sqlmateapi.controller.response.AuthResp;
+import com.marsh.sqlmateapi.domain.DatabaseUser;
 import com.marsh.sqlmateapi.domain.UserInfo;
 import com.marsh.sqlmateapi.exception.ErrorCode;
+import com.marsh.sqlmateapi.mapper.DatabaseUserMapper;
 import com.marsh.sqlmateapi.mapper.SignUpCodeMapper;
 import com.marsh.sqlmateapi.mapper.UserInfoMapper;
 import com.marsh.sqlmateapi.mapper.param.UserInfoGetParam;
@@ -14,6 +16,7 @@ import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.exception.BaseBizException;
 import com.marsh.zutils.helper.JwtHelper;
 import com.marsh.zutils.util.DateUtil;
+import com.marsh.zutils.util.UUIDUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,16 +38,19 @@ public class UserInfoService {
 
     private final TeamService teamService;
 
+    private final DatabaseUserMapper databaseUserMapper;
+
     public UserInfoService(UserInfoMapper userInfoMapper,
                            JwtHelper jwtHelper,
                            SignUpCodeMapper signUpCodeMapper,
                            JdbcTemplate jdbcTemplate,
-                           TeamService teamService) {
+                           TeamService teamService, DatabaseUserMapper databaseUserMapper) {
         this.userInfoMapper = userInfoMapper;
         this.jwtHelper = jwtHelper;
         this.signUpCodeMapper = signUpCodeMapper;
         this.jdbcTemplate = jdbcTemplate;
         this.teamService = teamService;
+        this.databaseUserMapper = databaseUserMapper;
     }
 
     @Transactional
@@ -84,9 +90,23 @@ public class UserInfoService {
                 .name("默认团队")
                 .build(), userInfo.getId());
         // 创建schema
-        var sql = "CREATE USER " + " user_" + userInfo.getPhone() + " WITH PASSWORD '123456789'";
-        jdbcTemplate.execute(sql);
+
+        createPgUser(userInfo);
         return AuthResp.builder().token(token).expiredTime(DateUtil.toMilli(expiredTime)).build();
+    }
+
+    private void createPgUser(UserInfo userInfo) {
+        var dbUsername = "user_" + userInfo.getPhone();
+        var password = UUIDUtil.cleanLowerUUID();
+
+        var sql = String.format("CREATE USER %s WITH PASSWORD '%s'", dbUsername, password);
+        jdbcTemplate.execute(sql);
+        databaseUserMapper.insert(DatabaseUser.builder()
+                .userId(userInfo.getId())
+                .dbType(2)
+                .password(password)
+                .username(dbUsername)
+                .build());
     }
 
     public AuthResp signIn(SignInReq req) {

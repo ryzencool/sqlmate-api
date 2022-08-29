@@ -67,11 +67,12 @@ public class DBMLService {
                 } else {
                     extend.add(String.format("default: '%s'", col.getDefaultValue()));
                 }
-
-
             }
             if (col.getIsAutoIncrement()) {
                 extend.add("increment");
+            }
+            if (StringUtils.isNotEmpty(col.getNote())) {
+                extend.add(String.format("note: '%s'", col.getNote()));
             }
             if (col.getIsNull()) {
                 extend.add("null");
@@ -84,7 +85,7 @@ public class DBMLService {
             if (col.getIsPrimaryKey()) {
                 extend.add("pk");
             }
-            var extendStr = extend.stream().collect(Collectors.joining(","));
+            var extendStr = String.join(",", extend);
             if (StringUtils.isNotEmpty(extendStr)) {
                 lineCol = lineCol + " [" + extendStr + "]\n";
             } else {

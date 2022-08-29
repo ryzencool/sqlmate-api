@@ -17,5 +17,7 @@ public class ProjectQueryReq {
 
     private Integer userId;
 
+    private Integer dbType;
+
 
 }

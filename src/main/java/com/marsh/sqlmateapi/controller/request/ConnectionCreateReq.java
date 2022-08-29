@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExecuteSqlReq {
-
-    private String sql;
+public class ConnectionCreateReq {
 
     private Integer projectId;
 
-    private Integer dbType;
+
 }

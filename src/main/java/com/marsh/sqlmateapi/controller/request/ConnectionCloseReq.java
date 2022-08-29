@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExecuteSqlReq {
+public class ConnectionCloseReq {
 
-    private String sql;
-
-    private Integer projectId;
-
-    private Integer dbType;
+    private String projectId;
 }

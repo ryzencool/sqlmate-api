@@ -20,7 +20,7 @@ public class ExecuteController {
 
     @PostMapping("/execute")
     public BaseResponse<Object> execute(@RequestBody ExecuteSqlReq req) {
-        return BaseResponse.success(executeService.execute(req.getSql()));
+        return BaseResponse.success(executeService.execute(req));
     }
 
 

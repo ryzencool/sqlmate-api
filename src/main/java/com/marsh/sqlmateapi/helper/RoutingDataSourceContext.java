@@ -1,32 +1,36 @@
 package com.marsh.sqlmateapi.helper;
 
+import org.springframework.stereotype.Component;
+
 public class RoutingDataSourceContext  {
 
-    static final ThreadLocal<String> threadLocalDataSourceKey = new ThreadLocal<>();
-
+    public static final ThreadLocal<String> RouteKey = new ThreadLocal<>();
     /**
      * 获取主数据库的key
      * @return
      */
     public static String getMainKey() {
-        return "fan_main";
+        return "master";
     }
+
+
+
+
 
     /**
      * 获取数据库key
      * @return
      */
-    public static String getDataSourceRoutingKey() {
-        String key = threadLocalDataSourceKey.get();
-        return key == null ? getMainKey() : key;
+    public static String getRouteKey() {
+        return  RouteKey.get();
     }
 
     /**
      * 设置数据库的key
      * @param key
      */
-    public static void setThreadLocalDataSourceKey(String key) {
-        threadLocalDataSourceKey.set(key);
+    public static void setRouteKey(String key) {
+        RouteKey.set(key);
     }
 
 }
