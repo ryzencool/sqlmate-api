@@ -14,6 +14,10 @@ public class ProjectSqlEditReq {
     private Integer id;
     private Integer projectId;
 
+    private String functionName;
+
+    private Boolean isFavorite;
+
     private String name;
 
     private String sql;

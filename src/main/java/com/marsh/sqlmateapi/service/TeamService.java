@@ -25,9 +25,9 @@ public class TeamService {
     }
 
 
-    public List<TeamInfo> listUserTeam(TeamQueryReq req) {
+    public List<TeamInfo> listUserTeam(TeamQueryReq req, Integer userId) {
 
-        return teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda().eq(req.getMasterId() != null, TeamInfo::getMasterId, req.getMasterId()));
+        return teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda().eq(req.getMasterId() != null, TeamInfo::getMasterId, req.getMasterId()).eq(TeamInfo::getMasterId, userId));
     }
 
     public List<TeamUserResult> listTeamMember(TeamUserQueryReq req, Integer userId) {

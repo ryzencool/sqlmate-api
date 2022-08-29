@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:55435/sqlmate?currentSchema=public&useSSL=false
+    password: zmy1qaz2wsx
+    username: zmyjust
+
+server:
+  servlet:
+    context-path: /api
+

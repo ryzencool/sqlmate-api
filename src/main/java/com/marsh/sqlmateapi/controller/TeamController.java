@@ -21,8 +21,8 @@ public class TeamController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<TeamInfo>> listUserTeam(TeamQueryReq req) {
-        return BaseResponse.success(teamService.listUserTeam(req));
+    public BaseResponse<List<TeamInfo>> listUserTeam(TeamQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(teamService.listUserTeam(req , identity.getUserId()));
     }
 
     @GetMapping("/member/list")

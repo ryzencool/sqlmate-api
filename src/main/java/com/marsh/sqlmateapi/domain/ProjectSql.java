@@ -21,6 +21,8 @@ public class ProjectSql {
 
     private String name;
 
+    private String functionName;
+
     private String sql;
 
     private Boolean isFavorite;

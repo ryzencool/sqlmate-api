@@ -11,5 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class QueryOptimizerReq {
 
-    private String[] sql;
+    private Integer id;
+
+    private Integer projectId;
+
+    private String sql;
 }
