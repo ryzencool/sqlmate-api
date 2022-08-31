@@ -46,6 +46,8 @@ public class ExecuteService {
         } catch (Exception e) {
             throw new BaseBizException(new BaseErrorCode("200000", e.getMessage()));
         }
+        RoutingDataSourceContext.setRouteKey("master");
+
         return result;
     }
 }
