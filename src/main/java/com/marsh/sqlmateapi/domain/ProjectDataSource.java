@@ -21,6 +21,10 @@ public class ProjectDataSource {
 
     private String url;
 
+    private String host;
+
+    private Integer port;
+
     private String name;
 
     private String username;

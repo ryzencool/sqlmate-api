@@ -9,13 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QueryOptimizerReq {
-
-    private Integer id;
+public class ConsoleGetReq {
 
     private Integer projectId;
-
-    private Integer dbType;
-
-    private String sql;
 }

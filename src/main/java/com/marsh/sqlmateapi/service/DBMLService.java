@@ -34,7 +34,10 @@ public class DBMLService {
 
     private final TableColumnMapper tableColumnMapper;
 
-    public DBMLService(TableService tableService, TableColumnService tableColumnService, TableInfoMapper tableInfoMapper, TableColumnMapper tableColumnMapper) {
+    public DBMLService(TableService tableService,
+                       TableColumnService tableColumnService,
+                       TableInfoMapper tableInfoMapper,
+                       TableColumnMapper tableColumnMapper) {
         this.tableService = tableService;
         this.tableColumnService = tableColumnService;
         this.tableInfoMapper = tableInfoMapper;

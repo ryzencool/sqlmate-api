@@ -26,8 +26,13 @@ public class TeamService {
 
 
     public List<TeamInfo> listUserTeam(TeamQueryReq req, Integer userId) {
+        var myTeams = teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda().eq(TeamInfo::getMasterId, userId));
 
-        return teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda().eq(req.getMasterId() != null, TeamInfo::getMasterId, req.getMasterId()).eq(TeamInfo::getMasterId, userId));
+
+
+        return teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda()
+                .eq(req.getMasterId() != null, TeamInfo::getMasterId,
+                        req.getMasterId()).eq(TeamInfo::getMasterId, userId));
     }
 
     public List<TeamUserResult> listTeamMember(TeamUserQueryReq req, Integer userId) {
@@ -36,9 +41,15 @@ public class TeamService {
 
     }
 
-    public void addTeam(TeamEditReq req, Integer userId) {
+    public TeamInfo addTeam(TeamEditReq req, Integer userId) {
         var team = BeanUtil.transfer(req, TeamInfo.class);
+        team.setMasterId(userId);
         teamInfoMapper.insert(team);
+
+        return teamInfoMapper.selectOne(new QueryWrapper<TeamInfo>()
+                .lambda().eq(TeamInfo::getMasterId, userId)
+                .eq(TeamInfo::getName, req.getName()));
+
     }
 
     public void joinTeam(TeamJoinReq req) {

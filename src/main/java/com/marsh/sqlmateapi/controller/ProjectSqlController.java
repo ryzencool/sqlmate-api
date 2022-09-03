@@ -27,8 +27,8 @@ public class ProjectSqlController {
     }
 
     @PostMapping("/add")
-    public BaseResponse<Object> addSql(@RequestBody ProjectSqlEditReq req) {
-        projectSqlService.addSql(req);
+    public BaseResponse<Object> addSql(@RequestBody ProjectSqlEditReq req, UserIdentity identity) {
+        projectSqlService.addSql(req, identity.getUserId());
         return BaseResponse.success();
     }
     @PostMapping("/update")

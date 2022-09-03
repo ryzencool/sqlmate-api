@@ -9,13 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QueryOptimizerReq {
+public class SyncReq {
 
-    private Integer id;
+    private String sql;
 
     private Integer projectId;
 
     private Integer dbType;
-
-    private String sql;
 }

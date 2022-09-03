@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QueryOptimizerReq {
+public class CloneCodeTemplateReq {
 
-    private Integer id;
+    private Integer templateId;
 
-    private Integer projectId;
+    private String name;
 
-    private Integer dbType;
+    private String note;
 
-    private String sql;
+    private String lang;
 }

@@ -21,7 +21,7 @@ public class TeamInfo {
 
     private String note;
 
-    private String masterId;
+    private Integer masterId;
 
     private LocalDateTime createTime;
 

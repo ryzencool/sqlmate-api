@@ -24,7 +24,7 @@ public class CodeTemplate {
 
     private String lang;
 
-    private Integer projectId;
+    private Integer ownerId;
 
     private String transferFn;
 

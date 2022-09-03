@@ -1,9 +1,6 @@
 package com.marsh.sqlmateapi.controller;
 
-import com.marsh.sqlmateapi.controller.request.CodeTemplateEditReq;
-import com.marsh.sqlmateapi.controller.request.CodeTemplateFileEditReq;
-import com.marsh.sqlmateapi.controller.request.CodeTemplateFileQueryReq;
-import com.marsh.sqlmateapi.controller.request.TemplateQueryReq;
+import com.marsh.sqlmateapi.controller.request.*;
 import com.marsh.sqlmateapi.domain.CodeTemplate;
 import com.marsh.sqlmateapi.domain.CodeTemplateFile;
 import com.marsh.sqlmateapi.service.CodeTemplateService;
@@ -64,6 +61,12 @@ public class CodeTemplateController {
     @PostMapping("/file/update")
     public BaseResponse<Object> updateTemplateFile(@RequestBody CodeTemplateFileEditReq req, UserIdentity identity) {
         codeTemplateService.updateFile(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/clone")
+    public BaseResponse<Object> cloneTemplate(@RequestBody CloneCodeTemplateReq req, UserIdentity identity) {
+        codeTemplateService.clone(req, identity.getUserId());
         return BaseResponse.success();
     }
 

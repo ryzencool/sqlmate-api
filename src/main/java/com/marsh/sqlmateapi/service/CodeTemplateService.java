@@ -1,16 +1,14 @@
 package com.marsh.sqlmateapi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.marsh.sqlmateapi.controller.request.CodeTemplateEditReq;
-import com.marsh.sqlmateapi.controller.request.CodeTemplateFileEditReq;
-import com.marsh.sqlmateapi.controller.request.CodeTemplateFileQueryReq;
-import com.marsh.sqlmateapi.controller.request.TemplateQueryReq;
+import com.marsh.sqlmateapi.controller.request.*;
 import com.marsh.sqlmateapi.domain.CodeTemplate;
 import com.marsh.sqlmateapi.domain.CodeTemplateFile;
 import com.marsh.sqlmateapi.mapper.CodeTemplateFileMapper;
 import com.marsh.sqlmateapi.mapper.CodeTemplateMapper;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -63,6 +61,31 @@ public class CodeTemplateService {
 
     public void updateFile(CodeTemplateFileEditReq req, Integer userId) {
         var file = BeanUtil.transfer(req, CodeTemplateFile.class);
-         codeTemplateFileMapper.updateById(file);
+        codeTemplateFileMapper.updateById(file);
+    }
+
+    @Transactional
+    public void clone(CloneCodeTemplateReq req, Integer userId) {
+        var oldTemplate = codeTemplateMapper.selectById(req.getTemplateId());
+
+        codeTemplateMapper.insert(CodeTemplate.builder()
+                .name(req.getName())
+                .lang(req.getLang())
+                .transferFn(oldTemplate.getTransferFn())
+                .ownerId(userId)
+                .build());
+        var codeTemplate = codeTemplateMapper.selectOne(new QueryWrapper<CodeTemplate>().lambda().eq(CodeTemplate::getName, req.getName()).eq(CodeTemplate::getOwnerId, userId));
+
+        var templateFiles = codeTemplateFileMapper.selectList(new QueryWrapper<CodeTemplateFile>().lambda().eq(CodeTemplateFile::getTemplateId, req.getTemplateId()));
+
+
+        for (CodeTemplateFile templateFile : templateFiles) {
+            codeTemplateFileMapper.insert(CodeTemplateFile.builder()
+                    .content(templateFile.getContent())
+                    .fileName(templateFile.getFileName())
+                    .fileType(templateFile.getFileType())
+                    .templateId(codeTemplate.getId())
+                    .build());
+        }
     }
 }

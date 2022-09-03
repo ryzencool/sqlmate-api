@@ -17,7 +17,7 @@ public class OptimizeController {
         this.optimizeService = optimizeService;
     }
 
-    @PostMapping("/queryOptimizer")
+    @PostMapping("/optimize")
     public BaseResponse<String> optimize(@RequestBody QueryOptimizerReq req) {
         return BaseResponse.success(optimizeService.optimize(req));
     }

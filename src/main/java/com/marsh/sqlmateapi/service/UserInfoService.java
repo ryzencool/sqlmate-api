@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.marsh.sqlmateapi.controller.request.SignInReq;
 import com.marsh.sqlmateapi.controller.request.SignUpReq;
 import com.marsh.sqlmateapi.controller.request.TeamEditReq;
+import com.marsh.sqlmateapi.controller.request.TeamJoinReq;
 import com.marsh.sqlmateapi.controller.response.AuthResp;
 import com.marsh.sqlmateapi.domain.DatabaseUser;
 import com.marsh.sqlmateapi.domain.UserInfo;
@@ -90,10 +91,15 @@ public class UserInfoService {
         userInfo.setExpiredTime(expiredTime);
         userInfoMapper.updateById(userInfo);
         // 默认团队
-        teamService.addTeam(TeamEditReq.builder()
+        var team = teamService.addTeam(TeamEditReq.builder()
                 .masterId(userInfo.getId())
                 .name("默认团队")
                 .build(), userInfo.getId());
+        teamService.joinTeam(TeamJoinReq.builder()
+                .teamId(team.getId())
+                .userId(userInfo.getId())
+                .build());
+
         // 创建schema
 
         createDBUser(userInfo);
@@ -101,29 +107,34 @@ public class UserInfoService {
     }
 
 
-
     private void createDBUser(UserInfo userInfo) {
         var dbUsername = "user_" + userInfo.getPhone();
         var password = UUIDUtil.cleanLowerUUID();
-
         var pgSql = String.format("CREATE USER %s WITH PASSWORD '%s'", dbUsername, password);
         var pgParam = new HashMap<String, Object>();
         pgParam.put("sql", pgSql);
         pgParam.put("dbType", 2);
         pgParam.put("dbName", "pgMain");
         var pgRes = HttpUtil.createPost("http://localhost:8081/executeSql").body(JSONObject.toJSONString(pgParam)).execute();
-        var mySql = String.format("CREATE USER '%s'@'*' IDENTIFIED BY '%s'", dbUsername, password);
-        var myParam = new HashMap<String, Object>();
-
-        myParam.put("dbType", 1);
-        myParam.put("sql", mySql);
-        myParam.put("dbName", "mysqlMain");
-        var myResult=HttpUtil.createPost("http://localhost:8081/executeSql").body(JSONObject.toJSONString(myParam)).execute();
         databaseUserMapper.insert(DatabaseUser.builder()
                 .userId(userInfo.getId())
                 .dbType(2)
                 .password(password)
                 .username(dbUsername)
+                .build());
+        var mySql = String.format("create user '%s'@'localhost' identified by '%s'", dbUsername, password);
+        var myParam = new HashMap<String, Object>();
+        myParam.put("dbType", 1);
+        myParam.put("sql", mySql);
+        myParam.put("dbName", "mysqlMain");
+        var myResult = HttpUtil.createPost("http://localhost:8081/executeSql").body(JSONObject.toJSONString(myParam)).execute();
+        var myDbUsername = "user_" + userInfo.getPhone();
+        var myPassword = UUIDUtil.cleanLowerUUID();
+        databaseUserMapper.insert(DatabaseUser.builder()
+                .userId(userInfo.getId())
+                .dbType(1)
+                .password(myPassword)
+                .username(myDbUsername)
                 .build());
     }
 
@@ -131,7 +142,8 @@ public class UserInfoService {
         var user = userInfoMapper.selectOne(new QueryWrapper<UserInfo>().lambda().eq(UserInfo::getPhone, req.getPhone()));
         if (user == null) {
             throw new BaseBizException(ErrorCode.USER_NOT_EXIST);
-        }var encoder = new BCryptPasswordEncoder();
+        }
+        var encoder = new BCryptPasswordEncoder();
         var isCorrect = encoder.matches(req.getPassword(), user.getPassword());
         if (!isCorrect) {
             throw new BaseBizException(ErrorCode.ERROR_PASSWORD);
