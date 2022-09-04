@@ -30,3 +30,6 @@ executor:
   mysql:
     host: 49.235.94.2
     port: 3306
+
+sqlexe:
+  url: http://localhost:8081

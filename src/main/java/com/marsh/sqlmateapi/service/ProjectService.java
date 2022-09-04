@@ -36,7 +36,7 @@ public class ProjectService {
 
     private final DatabaseUserMapper databaseUserMapper;
 
-
+    private final SqlExecutor sqlExecutor;
     public ProjectService(ExeDBProperties exeDBProperties,
                           ProjectInfoMapper projectInfoMapper,
                           ProjectSqlMapper projectSqlMapper,
@@ -44,7 +44,7 @@ public class ProjectService {
                           TableColumnMapper tableColumnMapper,
                           UserInfoMapper userInfoMapper,
                           ProjectDataSourceMapper projectDataSourceMapper,
-                          DatabaseUserMapper databaseUserMapper) {
+                          DatabaseUserMapper databaseUserMapper, SqlExecutor sqlExecutor) {
         this.exeDBProperties = exeDBProperties;
         this.projectInfoMapper = projectInfoMapper;
         this.projectSqlMapper = projectSqlMapper;
@@ -53,6 +53,7 @@ public class ProjectService {
         this.userInfoMapper = userInfoMapper;
         this.projectDataSourceMapper = projectDataSourceMapper;
         this.databaseUserMapper = databaseUserMapper;
+        this.sqlExecutor = sqlExecutor;
     }
 
     @Transactional
@@ -72,9 +73,9 @@ public class ProjectService {
                         exeDBProperties.getPg().getDatabase(),
                         dbName);
                 var schemaSql = String.format("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION %s", dbName, db.getUsername());
-                var pgRes = SqlExecutor.sendSql(schemaSql, "pgMain", 2);
+                var pgRes = sqlExecutor.sendSql(schemaSql, "pgMain", 2);
                 var grantSql = String.format("grant select, insert, update, delete on all tables in schema %s public to %s", dbName, db.getUsername());
-                var grantRes = SqlExecutor.sendSql(grantSql, "pgMain", 2);
+                var grantRes = sqlExecutor.sendSql(grantSql, "pgMain", 2);
                 projectDataSourceMapper.insert(ProjectDataSource.builder()
                         .projectId(pj.getId())
                         .dbType(db.getDbType())
@@ -92,9 +93,9 @@ public class ProjectService {
                         exeDBProperties.getMysql().getPort(),
                         dbName);
                 var createDb = String.format("create database if not exists %s character set utf8", dbName);
-                var createDbRes = SqlExecutor.sendSql(createDb, "mysqlMain", 1);
+                var createDbRes = sqlExecutor.sendSql(createDb, "mysqlMain", 1);
                 var grantPermission = String.format("GRANT select, insert, create, alter, drop, delete, update, execute on %s.* to '%s'@'%%' identified by '%s' with grant option", dbName, db.getUsername(), db.getPassword());
-                var grantRes = SqlExecutor.sendSql(grantPermission, "mysqlMain", 1);
+                var grantRes = sqlExecutor.sendSql(grantPermission, "mysqlMain", 1);
                 projectDataSourceMapper.insert(ProjectDataSource.builder()
                         .projectId(pj.getId())
                         .dbType(db.getDbType())

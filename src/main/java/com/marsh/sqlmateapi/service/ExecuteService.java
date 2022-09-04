@@ -7,18 +7,18 @@ import com.marsh.sqlmateapi.domain.ProjectDataSource;
 import com.marsh.sqlmateapi.mapper.ProjectDataSourceMapper;
 import com.marsh.sqlmateapi.utils.SqlExecutor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class ExecuteService {
 
-
+    private final SqlExecutor sqlExecutor;
     private final ProjectDataSourceMapper projectDataSourceMapper;
 
 
-    public ExecuteService( ProjectDataSourceMapper projectDataSourceMapper) {
+    public ExecuteService(SqlExecutor sqlExecutor, ProjectDataSourceMapper projectDataSourceMapper) {
+        this.sqlExecutor = sqlExecutor;
         this.projectDataSourceMapper = projectDataSourceMapper;
     }
 
@@ -30,7 +30,7 @@ public class ExecuteService {
                         .eq(ProjectDataSource::getDbType, req.getDbType()));
 
         sql = sql.strip();
-        var res = SqlExecutor.sendSql(sql, ds.getName(), ds.getDbType());
+        var res = sqlExecutor.sendSql(sql, ds.getName(), ds.getDbType());
         var resObj = JSONObject.parseObject(res.body());
         var code = (String)resObj.get("code");
         var data = resObj.getJSONObject("data");

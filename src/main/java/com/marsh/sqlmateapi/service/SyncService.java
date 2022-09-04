@@ -19,12 +19,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SyncService {
 
+    private final SqlExecutor sqlExecutor;
 
     private final ProjectDataSourceMapper projectDataSourceMapper;
 
     private final TableInfoMapper tableInfoMapper;
 
-    public SyncService(ProjectDataSourceMapper projectDataSourceMapper, TableInfoMapper tableInfoMapper) {
+    public SyncService(SqlExecutor sqlExecutor, ProjectDataSourceMapper projectDataSourceMapper, TableInfoMapper tableInfoMapper) {
+        this.sqlExecutor = sqlExecutor;
         this.projectDataSourceMapper = projectDataSourceMapper;
         this.tableInfoMapper = tableInfoMapper;
     }
@@ -42,7 +44,7 @@ public class SyncService {
 
         var sql = dropSql + "\n\n" + req.getSql();
 
-        var response = SqlExecutor.sendSql(sql, ds.getName(), ds.getDbType());
+        var response = sqlExecutor.sendSql(sql, ds.getName(), ds.getDbType());
 
         var jsonRes = JSONObject.parseObject(response.body());
 

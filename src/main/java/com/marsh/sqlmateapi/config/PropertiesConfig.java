@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@EnableConfigurationProperties(value = {ExeDBProperties.class})
+@EnableConfigurationProperties(value = {ExeDBProperties.class, SqlExecutorProperties.class})
 public class PropertiesConfig {
 }

@@ -1,9 +1,6 @@
 package com.marsh.sqlmateapi.controller;
 
-import com.marsh.sqlmateapi.controller.request.DefaultColumnDetailQueryReq;
-import com.marsh.sqlmateapi.controller.request.DefaultColumnTemplateEditReq;
-import com.marsh.sqlmateapi.controller.request.DefaultColumnTemplateQuery;
-import com.marsh.sqlmateapi.controller.request.DefaultColumnDetailEditReq;
+import com.marsh.sqlmateapi.controller.request.*;
 import com.marsh.sqlmateapi.domain.DefaultColumnDetail;
 import com.marsh.sqlmateapi.domain.DefaultColumnTemplate;
 import com.marsh.sqlmateapi.service.DefaultColumnService;
@@ -54,6 +51,13 @@ public class DefaultColumnController {
     @PostMapping("/detail/update")
     public BaseResponse<Object> updateDetail(@RequestBody DefaultColumnDetailEditReq req, UserIdentity identity){
         defaultColumnService.updateDetail(req, identity.getUserId());
+        return BaseResponse.success();
+    }
+
+
+    @PostMapping("/clone")
+    public BaseResponse<Object> clone(@RequestBody CloneDefaultColumnReq req, UserIdentity identity) {
+        defaultColumnService.clone(req, identity.getUserId());
         return BaseResponse.success();
     }
 
