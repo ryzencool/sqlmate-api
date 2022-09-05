@@ -3,6 +3,7 @@ package com.marsh.sqlmateapi.service;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.marsh.sqlmateapi.config.SqlExecutorProperties;
 import com.marsh.sqlmateapi.controller.request.SignInReq;
 import com.marsh.sqlmateapi.controller.request.SignUpReq;
 import com.marsh.sqlmateapi.controller.request.TeamEditReq;
@@ -15,13 +16,13 @@ import com.marsh.sqlmateapi.mapper.DatabaseUserMapper;
 import com.marsh.sqlmateapi.mapper.SignUpCodeMapper;
 import com.marsh.sqlmateapi.mapper.UserInfoMapper;
 import com.marsh.sqlmateapi.mapper.param.UserInfoGetParam;
+import com.marsh.sqlmateapi.utils.RemoteCallUtil;
+import com.marsh.sqlmateapi.utils.SqlExecutor;
 import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.exception.BaseBizException;
 import com.marsh.zutils.helper.JwtHelper;
 import com.marsh.zutils.util.DateUtil;
 import com.marsh.zutils.util.UUIDUtil;
-import okhttp3.RequestBody;
-import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,22 +45,27 @@ public class UserInfoService {
 
     private final TeamService teamService;
 
+    private final SqlExecutorProperties sqlExecutorProperties;
+
+    private final SqlExecutor sqlExecutor;
     private final DatabaseUserMapper databaseUserMapper;
 
     public UserInfoService(UserInfoMapper userInfoMapper,
                            JwtHelper jwtHelper,
                            SignUpCodeMapper signUpCodeMapper,
                            JdbcTemplate jdbcTemplate,
-                           TeamService teamService, DatabaseUserMapper databaseUserMapper) {
+                           TeamService teamService, SqlExecutorProperties sqlExecutorProperties, SqlExecutor sqlExecutor, DatabaseUserMapper databaseUserMapper) {
         this.userInfoMapper = userInfoMapper;
         this.jwtHelper = jwtHelper;
         this.signUpCodeMapper = signUpCodeMapper;
         this.jdbcTemplate = jdbcTemplate;
         this.teamService = teamService;
+        this.sqlExecutorProperties = sqlExecutorProperties;
+        this.sqlExecutor = sqlExecutor;
         this.databaseUserMapper = databaseUserMapper;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AuthResp signUp(SignUpReq req) {
 //        var codeObj = signUpCodeMapper.selectOne(new QueryWrapper<SignUpCode>().lambda().eq(SignUpCode::getPhone, req
 //                .getPhone()));
@@ -111,25 +117,22 @@ public class UserInfoService {
         var dbUsername = "user_" + userInfo.getPhone();
         var password = UUIDUtil.cleanLowerUUID();
         var pgSql = String.format("CREATE USER %s WITH PASSWORD '%s'", dbUsername, password);
-        var pgParam = new HashMap<String, Object>();
-        pgParam.put("sql", pgSql);
-        pgParam.put("dbType", 2);
-        pgParam.put("dbName", "pgMain");
-        var pgRes = HttpUtil.createPost("http://localhost:8081/executeSql").body(JSONObject.toJSONString(pgParam)).execute();
+        try (var pgRes = sqlExecutor.sendPgMainSql(pgSql)) {
+            RemoteCallUtil.handleErrorResponse(pgRes);
+        }
         databaseUserMapper.insert(DatabaseUser.builder()
                 .userId(userInfo.getId())
                 .dbType(2)
                 .password(password)
                 .username(dbUsername)
                 .build());
-        var mySql = String.format("create user '%s'@'localhost' identified by '%s'", dbUsername, password);
-        var myParam = new HashMap<String, Object>();
-        myParam.put("dbType", 1);
-        myParam.put("sql", mySql);
-        myParam.put("dbName", "mysqlMain");
-        var myResult = HttpUtil.createPost("http://localhost:8081/executeSql").body(JSONObject.toJSONString(myParam)).execute();
+
         var myDbUsername = "user_" + userInfo.getPhone();
         var myPassword = UUIDUtil.cleanLowerUUID();
+        var mySql = String.format("create user '%s'@'localhost' identified by '%s'", myDbUsername, myPassword);
+        try (var myResult = sqlExecutor.sendMysqlMainSql(mySql)) {
+            RemoteCallUtil.handleErrorResponse(myResult);
+        }
         databaseUserMapper.insert(DatabaseUser.builder()
                 .userId(userInfo.getId())
                 .dbType(1)

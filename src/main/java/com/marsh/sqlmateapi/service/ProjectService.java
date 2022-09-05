@@ -10,6 +10,7 @@ import com.marsh.sqlmateapi.controller.request.PublicProjectQueryReq;
 import com.marsh.sqlmateapi.controller.response.ProjectStatResp;
 import com.marsh.sqlmateapi.domain.*;
 import com.marsh.sqlmateapi.mapper.*;
+import com.marsh.sqlmateapi.utils.RemoteCallUtil;
 import com.marsh.sqlmateapi.utils.SqlExecutor;
 import com.marsh.zutils.util.BeanUtil;
 import com.marsh.zutils.util.UUIDUtil;
@@ -56,7 +57,7 @@ public class ProjectService {
         this.sqlExecutor = sqlExecutor;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addProject(AddProjectReq req, Integer userId) {
         var project = BeanUtil.transfer(req, ProjectInfo.class);
         project.setOwnerId(userId);
@@ -73,9 +74,14 @@ public class ProjectService {
                         exeDBProperties.getPg().getDatabase(),
                         dbName);
                 var schemaSql = String.format("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION %s", dbName, db.getUsername());
-                var pgRes = sqlExecutor.sendSql(schemaSql, "pgMain", 2);
+                try (var pgRes = sqlExecutor.sendPgMainSql(schemaSql)) {
+                    RemoteCallUtil.handleErrorResponse(pgRes);
+                };
                 var grantSql = String.format("grant select, insert, update, delete on all tables in schema %s public to %s", dbName, db.getUsername());
-                var grantRes = sqlExecutor.sendSql(grantSql, "pgMain", 2);
+                try (var grantRes = sqlExecutor.sendPgMainSql(grantSql)) {
+                    RemoteCallUtil.handleErrorResponse(grantRes);
+                };
+
                 projectDataSourceMapper.insert(ProjectDataSource.builder()
                         .projectId(pj.getId())
                         .dbType(db.getDbType())
@@ -93,9 +99,13 @@ public class ProjectService {
                         exeDBProperties.getMysql().getPort(),
                         dbName);
                 var createDb = String.format("create database if not exists %s character set utf8", dbName);
-                var createDbRes = sqlExecutor.sendSql(createDb, "mysqlMain", 1);
+               try ( var createDbRes = sqlExecutor.sendMysqlMainSql(createDb)) {
+                   RemoteCallUtil.handleErrorResponse(createDbRes);
+               };
                 var grantPermission = String.format("GRANT select, insert, create, alter, drop, delete, update, execute on %s.* to '%s'@'%%' identified by '%s' with grant option", dbName, db.getUsername(), db.getPassword());
-                var grantRes = sqlExecutor.sendSql(grantPermission, "mysqlMain", 1);
+                try (var grantRes = sqlExecutor.sendMysqlMainSql(grantPermission)) {
+                    RemoteCallUtil.handleErrorResponse(grantRes);
+                };
                 projectDataSourceMapper.insert(ProjectDataSource.builder()
                         .projectId(pj.getId())
                         .dbType(db.getDbType())

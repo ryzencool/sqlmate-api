@@ -28,6 +28,15 @@ public class SqlExecutor {
                 .execute();
 
     }
+
+
+    public HttpResponse sendPgMainSql(String sql) {
+        return sendSql(sql, "pgMain", 2);
+    }
+
+    public HttpResponse sendMysqlMainSql(String sql) {
+        return sendSql(sql, "mysqlMain", 1);
+    }
     public  HttpResponse optimize(String sql, String dbName, Integer dbType,
                                         String username, String password,
                                         String host, Integer port) {
