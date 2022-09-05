@@ -21,4 +21,10 @@ public class FavoriteProjectDetail {
     private String note;
 
     private String[] tags;
+
+    private Integer openCount;
+
+    private Integer cloneCount;
+
+    private Integer collectCount;
 }

@@ -40,6 +40,12 @@ public class ProjectInfo {
 
     private Integer parentProjectId;
 
+    private Integer openCount;
+
+    private Integer cloneCount;
+
+    private Integer collectCount;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;

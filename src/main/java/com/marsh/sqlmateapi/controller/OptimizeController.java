@@ -1,8 +1,8 @@
 package com.marsh.sqlmateapi.controller;
 
 import com.marsh.sqlmateapi.controller.request.QueryOptimizerReq;
-import com.marsh.sqlmateapi.controller.response.QueryOptimizerResp;
 import com.marsh.sqlmateapi.service.OptimizeService;
+import com.marsh.sqlmateapi.service.dto.OptimizeDto;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +18,7 @@ public class OptimizeController {
     }
 
     @PostMapping("/optimize")
-    public BaseResponse<String> optimize(@RequestBody QueryOptimizerReq req) {
+    public BaseResponse<OptimizeDto> optimize(@RequestBody QueryOptimizerReq req) {
         return BaseResponse.success(optimizeService.optimize(req));
     }
 }

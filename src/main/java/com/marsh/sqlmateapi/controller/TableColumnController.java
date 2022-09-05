@@ -40,8 +40,8 @@ public class TableColumnController {
     }
 
     @PostMapping("/add")
-    public BaseResponse<Object> addColumn(@RequestBody ColumnUpdateReq req) {
-        tableColumnService.addColumn(req);
+    public BaseResponse<Object> addColumn(@RequestBody ColumnUpdateReq req, UserIdentity identity) {
+        tableColumnService.addColumn(req, identity.getUserId());
         return BaseResponse.success();
     }
 

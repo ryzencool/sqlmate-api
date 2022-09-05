@@ -8,6 +8,7 @@ import com.marsh.sqlmateapi.mapper.ProjectSqlMapper;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,13 +26,16 @@ public class ProjectSqlService {
                 .and(req.getCondition() != null,
                         it ->
                                 it.like(req.getCondition() != null, ProjectSql::getNote, req.getCondition())
-                                        .like(req.getCondition() != null, ProjectSql::getSql, req.getCondition()))
+                                        .like(req.getCondition() != null, ProjectSql::getSql, req.getCondition())
+                                        ).orderByDesc(ProjectSql::getCreateTime)
 
         );
     }
 
     public void addSql(ProjectSqlEditReq req, Integer userId) {
         var sql = BeanUtil.transfer(req, ProjectSql.class);
+        sql.setCreateTime(LocalDateTime.now());
+        sql.setCreateId(userId);
         projectSqlMapper.insert(sql);
     }
 
@@ -40,8 +44,10 @@ public class ProjectSqlService {
 
     }
 
-    public void updateSql(ProjectSqlEditReq req) {
+    public void updateSql(ProjectSqlEditReq req, Integer userId) {
         var sql = BeanUtil.transfer(req, ProjectSql.class);
+        sql.setUpdateTime(LocalDateTime.now());
+        sql.setUpdateId(userId);
         projectSqlMapper.updateById(sql);
 
     }

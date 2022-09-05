@@ -53,6 +53,10 @@ public class TableColumn {
     // 注释
     private String comment;
 
+    private String kindKey;
+
+    private String cateKey;
+
     // 创建时间
     private LocalDateTime createTime;
 

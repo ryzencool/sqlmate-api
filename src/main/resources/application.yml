@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:55435/sqlmate?currentSchema=public&useSSL=false
-    password: abc123
-    username: postgres
+    url: jdbc:postgresql://49.235.94.2:55435/sqlmate?currentSchema=public&useSSL=false
+    password: zmy1qaz2wsx
+    username: zmyjust
 
 mybatis-plus:
   global-config:
@@ -24,7 +24,7 @@ jwt:
 
 executor:
   pg:
-    host: localhost
+    host: 49.235.94.2
     port: 55435
     database: sqlmate
   mysql:
@@ -32,4 +32,5 @@ executor:
     port: 3306
 
 sqlexe:
-  url: http://localhost:8081
+  url: http://49.235.94.2:8081
+#  url: http://localhost:8081

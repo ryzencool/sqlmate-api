@@ -63,6 +63,9 @@ public class FullTableColumnDto {
 
     private ColumnRelationShip columnRelationShip;
 
+    private String kindKey;
+
+    private String cateKey;
 
 
 }

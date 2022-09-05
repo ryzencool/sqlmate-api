@@ -31,8 +31,8 @@ public class CodeTemplateController {
     }
 
     @PostMapping("/add")
-    public BaseResponse<Object> addTemplate(@RequestBody CodeTemplateEditReq req) {
-        codeTemplateService.createTemplate(req);
+    public BaseResponse<Object> addTemplate(@RequestBody CodeTemplateEditReq req, UserIdentity identity) {
+        codeTemplateService.createTemplate(req, identity.getUserId());
         return BaseResponse.success();
     }
 
@@ -43,13 +43,13 @@ public class CodeTemplateController {
     }
 
     @PostMapping("/file/add")
-    public BaseResponse<Object> addFile(@RequestBody CodeTemplateFileEditReq req) {
-        codeTemplateService.addFile(req);
+    public BaseResponse<Object> addFile(@RequestBody CodeTemplateFileEditReq req, UserIdentity identity) {
+        codeTemplateService.addFile(req, identity.getUserId());
         return BaseResponse.success();
     }
 
     @GetMapping("/file/list")
-    public BaseResponse<List<CodeTemplateFile>> listTemplateFile(CodeTemplateFileQueryReq req) {
+    public BaseResponse<List<CodeTemplateFile>> listTemplateFile(CodeTemplateFileQueryReq req, UserIdentity identity) {
         return BaseResponse.success(codeTemplateService.listFile(req));
     }
 

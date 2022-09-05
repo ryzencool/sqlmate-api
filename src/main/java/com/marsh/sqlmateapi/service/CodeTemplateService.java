@@ -10,6 +10,7 @@ import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,19 +34,25 @@ public class CodeTemplateService {
                 .eq(CodeTemplate::getIsDel, false));
     }
 
-    public void createTemplate(CodeTemplateEditReq req) {
+    public void createTemplate(CodeTemplateEditReq req, Integer userId) {
         var tpl = BeanUtil.transfer(req, CodeTemplate.class);
+        tpl.setOwnerId(userId);
+        tpl.setCreateTime(LocalDateTime.now());
         codeTemplateMapper.insert(tpl);
     }
 
     public void updateTemplate(CodeTemplateEditReq req, Integer userId) {
         var tpl = BeanUtil.transfer(req, CodeTemplate.class);
+        tpl.setUpdateId(userId);
+        tpl.setUpdateTime(LocalDateTime.now());
         codeTemplateMapper.updateById(tpl);
 
     }
 
-    public void addFile(CodeTemplateFileEditReq req) {
+    public void addFile(CodeTemplateFileEditReq req, Integer userId) {
         var file = BeanUtil.transfer(req, CodeTemplateFile.class);
+        file.setCreateTime(LocalDateTime.now());
+        file.setCreateId(userId);
         codeTemplateFileMapper.insert(file);
     }
 
@@ -61,6 +68,8 @@ public class CodeTemplateService {
 
     public void updateFile(CodeTemplateFileEditReq req, Integer userId) {
         var file = BeanUtil.transfer(req, CodeTemplateFile.class);
+        file.setUpdateId(userId);
+        file.setUpdateTime(LocalDateTime.now());
         codeTemplateFileMapper.updateById(file);
     }
 
@@ -74,7 +83,9 @@ public class CodeTemplateService {
                 .transferFn(oldTemplate.getTransferFn())
                 .ownerId(userId)
                 .build());
-        var codeTemplate = codeTemplateMapper.selectOne(new QueryWrapper<CodeTemplate>().lambda().eq(CodeTemplate::getName, req.getName()).eq(CodeTemplate::getOwnerId, userId));
+        var codeTemplate = codeTemplateMapper.selectOne(new QueryWrapper<CodeTemplate>()
+                .lambda().eq(CodeTemplate::getName, req.getName())
+                .eq(CodeTemplate::getOwnerId, userId));
 
         var templateFiles = codeTemplateFileMapper.selectList(new QueryWrapper<CodeTemplateFile>().lambda().eq(CodeTemplateFile::getTemplateId, req.getTemplateId()));
 

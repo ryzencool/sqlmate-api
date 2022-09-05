@@ -55,7 +55,7 @@ public class SyncService {
         }
 
         return jsonRes.get("data");
-
-
     }
+
+
 }

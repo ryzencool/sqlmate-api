@@ -9,3 +9,5 @@ server:
   servlet:
     context-path: /api
 
+sqlexe:
+  url: http://localhost:8081

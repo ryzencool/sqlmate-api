@@ -16,6 +16,7 @@ import com.marsh.zutils.util.BeanUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -93,8 +94,10 @@ public class TableColumnService {
         tableColumnMapper.deleteById(columnId);
     }
 
-    public void addColumn(ColumnUpdateReq req) {
+    public void addColumn(ColumnUpdateReq req, Integer userId) {
         var col = BeanUtil.transfer(req, TableColumn.class);
+        col.setCreateId(userId);
+        col.setCreateTime(LocalDateTime.now());
         tableColumnMapper.insert(col);
     }
 

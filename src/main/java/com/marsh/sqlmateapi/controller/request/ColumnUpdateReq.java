@@ -38,4 +38,8 @@ public class ColumnUpdateReq {
 
     // 注释
     private String comment;
+
+    private String kindKey;
+
+    private String cateKey;
 }
