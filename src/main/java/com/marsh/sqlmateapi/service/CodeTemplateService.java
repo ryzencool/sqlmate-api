@@ -29,8 +29,9 @@ public class CodeTemplateService {
         return codeTemplateMapper.selectById(req.getId());
     }
 
-    public List<CodeTemplate> listTemplate(TemplateQueryReq req) {
+    public List<CodeTemplate> listTemplate(TemplateQueryReq req, Integer userId) {
         return codeTemplateMapper.selectList(new QueryWrapper<CodeTemplate>().lambda()
+                        .in(CodeTemplate::getOwnerId, List.of(userId, 0))
                 .eq(CodeTemplate::getIsDel, false));
     }
 

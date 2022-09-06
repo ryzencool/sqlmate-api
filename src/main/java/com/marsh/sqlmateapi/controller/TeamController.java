@@ -43,8 +43,10 @@ public class TeamController {
     }
 
     @GetMapping("/generateUrl")
-    public void generateUrl(TeamUrlGenerateReq req) {
-        teamService.generateTeamUrl(req);
+    public BaseResponse<String> generateUrl(TeamUrlGenerateReq req, UserIdentity identity) {
+        var res = teamService.generateTeamUrl(req, identity.getUserId());
+        return BaseResponse.success(res);
+
         // redirect to
     }
 

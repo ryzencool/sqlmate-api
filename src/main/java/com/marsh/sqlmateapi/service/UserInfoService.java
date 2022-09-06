@@ -83,6 +83,7 @@ public class UserInfoService {
         var encoder = new BCryptPasswordEncoder();
         var passwordEncoded = encoder.encode(req.getPassword());
         userInfoMapper.insert(UserInfo.builder()
+                        .username(req.getUsername())
                 .phone(req.getPhone())
                 .password(passwordEncoded)
                 .email(req.getEmail())

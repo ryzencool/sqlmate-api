@@ -26,8 +26,8 @@ public class CodeTemplateController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<CodeTemplate>> listTemplate(TemplateQueryReq req) {
-        return BaseResponse.success(codeTemplateService.listTemplate(req));
+    public BaseResponse<List<CodeTemplate>> listTemplate(TemplateQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(codeTemplateService.listTemplate(req, identity.getUserId()));
     }
 
     @PostMapping("/add")

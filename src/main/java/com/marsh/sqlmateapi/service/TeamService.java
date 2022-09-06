@@ -1,5 +1,9 @@
 package com.marsh.sqlmateapi.service;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.DES;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.marsh.sqlmateapi.controller.request.*;
 import com.marsh.sqlmateapi.domain.TeamInfo;
@@ -7,9 +11,16 @@ import com.marsh.sqlmateapi.domain.TeamUser;
 import com.marsh.sqlmateapi.mapper.TeamInfoMapper;
 import com.marsh.sqlmateapi.mapper.TeamUserMapper;
 import com.marsh.sqlmateapi.mapper.result.TeamUserResult;
+import com.marsh.sqlmateapi.service.dto.TeamJoinDto;
+import com.marsh.sqlmateapi.utils.CryptString;
 import com.marsh.zutils.util.BeanUtil;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,7 +38,6 @@ public class TeamService {
 
     public List<TeamInfo> listUserTeam(TeamQueryReq req, Integer userId) {
         var myTeams = teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda().eq(TeamInfo::getMasterId, userId));
-
 
 
         return teamInfoMapper.selectList(new QueryWrapper<TeamInfo>().lambda()
@@ -53,6 +63,8 @@ public class TeamService {
     }
 
     public void joinTeam(TeamJoinReq req) {
+        String password = "7e6659eb-b45b-4e28-957b-e346164112b8";
+
         var tu = TeamUser.builder()
                 .teamId(req.getTeamId())
                 .userId(req.getUserId())
@@ -61,7 +73,18 @@ public class TeamService {
 
     }
 
-    public void generateTeamUrl(TeamUrlGenerateReq req) {
+    @SneakyThrows
+    public String generateTeamUrl(TeamUrlGenerateReq req, Integer userId) {
+        String password = "7e6659eb-b45b-4e28-957b-e346164112b8";
+        DESKeySpec key = new DESKeySpec(password.getBytes());
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+        CryptString crypt = new CryptString(keyFactory.generateSecret(key));
+        var str = JSONObject.toJSONString(TeamJoinDto.builder()
+                .teamId(req.getTeamId())
+                .userId(userId)
+                .time(System.currentTimeMillis())
+                .build());
 
+        return crypt.encryptBase64(str);
     }
 }

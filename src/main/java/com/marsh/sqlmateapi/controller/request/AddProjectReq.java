@@ -13,5 +13,15 @@ public class AddProjectReq {
     private String name;
 
     private String note;
+
+    private Integer dbTpe;
+
+    private Integer[] teamIds;
+
+    private String tags;
+
+    private Boolean isPublic;
+
+    private Integer defaultColumnTemplateId;
 }
 

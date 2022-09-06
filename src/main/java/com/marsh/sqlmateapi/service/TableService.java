@@ -14,7 +14,9 @@ import com.marsh.sqlmateapi.service.dto.TableSimpleDto;
 import com.marsh.sqlmateapi.service.dto.TableWithColumnsDto;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,16 +81,20 @@ public class TableService {
         return columnGroup;
     }
 
-    public void updateTable(TableEditReq req) {
+    @Transactional
+    public void updateTable(TableEditReq req, Integer userId) {
         var table = BeanUtil.transfer(req, TableInfo.class);
+        table.setCreateTime(LocalDateTime.now());
+        table.setCreateId(userId);
         tableInfoMapper.updateById(table);
     }
 
-    public void createTable(TableEditReq req) {
+    @Transactional(rollbackFor = Exception.class)
+    public Integer createTable(TableEditReq req, Integer userId) {
         var table = BeanUtil.transfer(req, TableInfo.class);
+        table.setCreateTime(LocalDateTime.now());
+        table.setCreateId(userId);
         var tableId = tableInfoMapper.insertReturnId(table);
-
-
         // 创建预设字段
         if (req.getDefaultColumnTemplateId() != null || req.getDefaultColumnTemplateId() == 0) {
 
@@ -106,10 +112,13 @@ public class TableService {
                         .defaultValue(detail.getDefaultValue())
                         .isPrimaryKey(detail.getIsPrimaryKey())
                         .isUniqueKey(detail.getIsUniqueKey())
+                        .createTime(LocalDateTime.now())
+                        .createId(userId)
                         .tableId(tableId)
                         .build();
                 tableColumnMapper.insert(newColumn);
             }
         }
+        return tableId;
     }
 }

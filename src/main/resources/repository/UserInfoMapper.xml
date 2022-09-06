@@ -7,7 +7,7 @@
 
 
     <select id="getUserInfo" resultType="com.marsh.sqlmateapi.domain.UserInfo">
-        select id, phone, email from user_info
+        select id, phone, email, username from user_info
 
         <where>
             <if test="id != null">

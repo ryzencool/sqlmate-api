@@ -35,6 +35,7 @@ public class ProjectSnapshotService {
     public void createSnapshot(SnapshotEditReq req, Integer userId) {
         var snap = BeanUtil.transfer(req, ProjectSnapshot.class);
         snap.setCreateTime(LocalDateTime.now());
+        snap.setCreateId(userId);
         projectSnapshotMapper.insert(snap);
     }
 
