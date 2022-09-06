@@ -1,8 +1,6 @@
 package com.marsh.sqlmateapi.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.marsh.mpext.common.StringArrayTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +18,8 @@ public class TableColumn {
     @TableId
     private Long id;
 
+    private Integer projectId;
+
     // 表编号
     private Integer tableId;
 
@@ -33,7 +33,7 @@ public class TableColumn {
     private String defaultValue;
 
     // 是否可空
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     // 是否唯一键
     private Boolean isUniqueKey;

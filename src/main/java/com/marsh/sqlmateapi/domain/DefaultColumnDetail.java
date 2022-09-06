@@ -25,7 +25,7 @@ public class DefaultColumnDetail {
 
     private String defaultValue;
 
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     private Boolean isUniqueKey;
 

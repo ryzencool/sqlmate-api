@@ -1,7 +1,5 @@
 package com.marsh.sqlmateapi.service;
 
-import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.marsh.sqlmateapi.config.SqlExecutorProperties;
 import com.marsh.sqlmateapi.controller.request.SignInReq;
@@ -29,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -119,7 +116,7 @@ public class UserInfoService {
         var password = UUIDUtil.cleanLowerUUID();
         var pgSql = String.format("CREATE USER %s WITH PASSWORD '%s'", dbUsername, password);
         try (var pgRes = sqlExecutor.sendPgMainSql(pgSql)) {
-            RemoteCallUtil.handleErrorResponse(pgRes);
+            RemoteCallUtil.handleResponse(pgRes);
         }
         databaseUserMapper.insert(DatabaseUser.builder()
                 .userId(userInfo.getId())
@@ -132,7 +129,7 @@ public class UserInfoService {
         var myPassword = UUIDUtil.cleanLowerUUID();
         var mySql = String.format("create user '%s'@'localhost' identified by '%s'", myDbUsername, myPassword);
         try (var myResult = sqlExecutor.sendMysqlMainSql(mySql)) {
-            RemoteCallUtil.handleErrorResponse(myResult);
+            RemoteCallUtil.handleResponse(myResult);
         }
         databaseUserMapper.insert(DatabaseUser.builder()
                 .userId(userInfo.getId())

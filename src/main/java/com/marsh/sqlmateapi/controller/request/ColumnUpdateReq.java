@@ -22,7 +22,7 @@ public class ColumnUpdateReq {
     private Integer tableId;
 
     // 是否可空
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     // 是否唯一键
     private Boolean isUniqueKey;
@@ -42,4 +42,6 @@ public class ColumnUpdateReq {
     private String kindKey;
 
     private String cateKey;
+
+    private String defaultValue;
 }

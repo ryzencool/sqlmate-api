@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class FullTableColumnDto {
     private String defaultValue;
 
     // 是否可空
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     // 是否唯一键
     private Boolean isUniqueKey;

@@ -12,7 +12,7 @@
         t1.default_value as default_value,
         t1.is_unique_key as is_unique_key,
         t1.is_primary_key as is_primary_key,
-        t1.is_null as is_null,
+        t1.is_not_null as is_not_null,
         t1.is_auto_increment as is_auto_increment,
         t2.id as table_id,
         t2.name as table_name

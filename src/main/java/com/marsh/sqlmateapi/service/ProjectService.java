@@ -44,6 +44,8 @@ public class ProjectService {
 
     private final SqlExecutor sqlExecutor;
 
+    private final TableIndexMapper tableIndexMapper;
+
     public ProjectService(ExeDBProperties exeDBProperties,
                           ProjectInfoMapper projectInfoMapper,
                           ProjectSqlMapper projectSqlMapper,
@@ -51,7 +53,7 @@ public class ProjectService {
                           TableColumnMapper tableColumnMapper,
                           UserInfoMapper userInfoMapper,
                           ProjectDataSourceMapper projectDataSourceMapper,
-                          DatabaseUserMapper databaseUserMapper, SqlExecutor sqlExecutor) {
+                          DatabaseUserMapper databaseUserMapper, SqlExecutor sqlExecutor, TableIndexMapper tableIndexMapper) {
         this.exeDBProperties = exeDBProperties;
         this.projectInfoMapper = projectInfoMapper;
         this.projectSqlMapper = projectSqlMapper;
@@ -61,6 +63,7 @@ public class ProjectService {
         this.projectDataSourceMapper = projectDataSourceMapper;
         this.databaseUserMapper = databaseUserMapper;
         this.sqlExecutor = sqlExecutor;
+        this.tableIndexMapper = tableIndexMapper;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -100,11 +103,11 @@ public class ProjectService {
                 dbName);
         var createDb = String.format("create database if not exists %s character set utf8", dbName);
         try (var createDbRes = sqlExecutor.sendMysqlMainSql(createDb)) {
-            RemoteCallUtil.handleErrorResponse(createDbRes);
+            RemoteCallUtil.handleResponse(createDbRes);
         }
         var grantPermission = String.format("GRANT select, insert, create, alter, drop, delete, update, execute on %s.* to '%s'@'%%' identified by '%s' with grant option", dbName, db.getUsername(), db.getPassword());
         try (var grantRes = sqlExecutor.sendMysqlMainSql(grantPermission)) {
-            RemoteCallUtil.handleErrorResponse(grantRes);
+            RemoteCallUtil.handleResponse(grantRes);
         }
         projectDataSourceMapper.insert(ProjectDataSource.builder()
                 .projectId(pj.getId())
@@ -126,11 +129,11 @@ public class ProjectService {
                 dbName);
         var schemaSql = String.format("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION %s", dbName, db.getUsername());
         try (var pgRes = sqlExecutor.sendPgMainSql(schemaSql)) {
-            RemoteCallUtil.handleErrorResponse(pgRes);
+            RemoteCallUtil.handleResponse(pgRes);
         }
         var grantSql = String.format("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA %s TO %s", dbName, db.getUsername());
         try (var grantRes = sqlExecutor.sendPgMainSql(grantSql)) {
-            RemoteCallUtil.handleErrorResponse(grantRes);
+            RemoteCallUtil.handleResponse(grantRes);
         }
 
         projectDataSourceMapper.insert(ProjectDataSource.builder()
@@ -163,11 +166,17 @@ public class ProjectService {
                 .lambda().eq(ProjectSql::getProjectId, projectId));
         var tableCount = tableInfoMapper.selectCount(new QueryWrapper<TableInfo>().lambda()
                 .eq(TableInfo::getProjectId, projectId));
-
+        var columnCount = tableColumnMapper.selectCount(new QueryWrapper<TableColumn>().lambda().eq(TableColumn::getProjectId, projectId));
+        var indexCount = tableIndexMapper.selectCount(new QueryWrapper<TableIndex>().lambda().eq(TableIndex::getProjectId, projectId));
         return ProjectStatResp.builder()
                 .createUser(createUser)
                 .updateUser(updateUser)
-                .projectInfo(project).sqlCount(sqlCount).tableCount(tableCount).build();
+                .projectInfo(project)
+                .sqlCount(sqlCount)
+                .tableCount(tableCount)
+                .columnCount(columnCount)
+                .indexCount(indexCount)
+                .build();
 
     }
 

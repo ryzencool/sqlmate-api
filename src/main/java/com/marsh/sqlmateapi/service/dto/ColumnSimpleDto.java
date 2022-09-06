@@ -19,7 +19,7 @@ public class ColumnSimpleDto {
 
     private String defaultValue;
 
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     private Boolean isAutoIncrement;
 

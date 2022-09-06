@@ -7,6 +7,7 @@ import com.marsh.sqlmateapi.domain.ProjectDataSource;
 import com.marsh.sqlmateapi.domain.TableInfo;
 import com.marsh.sqlmateapi.mapper.ProjectDataSourceMapper;
 import com.marsh.sqlmateapi.mapper.TableInfoMapper;
+import com.marsh.sqlmateapi.utils.RemoteCallUtil;
 import com.marsh.sqlmateapi.utils.SqlExecutor;
 import com.marsh.zutils.exception.BaseBizException;
 import lombok.extern.slf4j.Slf4j;
@@ -44,17 +45,11 @@ public class SyncService {
 
         var sql = dropSql + "\n\n" + req.getSql();
 
-        var response = sqlExecutor.sendSql(sql, ds.getName(), ds.getDbType());
-
-        var jsonRes = JSONObject.parseObject(response.body());
-
-        var code = jsonRes.getString("code");
-        if (!Objects.equals(code, "000000")) {
-            log.info("出现错误, {}", code);
-            throw new BaseBizException("出现错误");
+        try (var response = sqlExecutor.sendSql(sql, ds.getName(), ds.getDbType())) {
+            return RemoteCallUtil.handleResponse(response);
         }
 
-        return jsonRes.get("data");
+
     }
 
 

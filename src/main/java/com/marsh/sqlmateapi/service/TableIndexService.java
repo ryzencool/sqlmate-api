@@ -6,10 +6,13 @@ import com.marsh.sqlmateapi.controller.request.TableIndexEditReq;
 import com.marsh.sqlmateapi.controller.request.TableIndexQueryReq;
 import com.marsh.sqlmateapi.domain.TableIndex;
 import com.marsh.sqlmateapi.mapper.TableIndexMapper;
+import com.marsh.sqlmateapi.mapper.TableInfoMapper;
 import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.util.BeanUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,8 +21,11 @@ public class TableIndexService {
 
     private final TableIndexMapper tableIndexMapper;
 
-    public TableIndexService(TableIndexMapper tableIndexMapper) {
+    private final TableInfoMapper tableInfoMapper;
+
+    public TableIndexService(TableIndexMapper tableIndexMapper, TableInfoMapper tableInfoMapper) {
         this.tableIndexMapper = tableIndexMapper;
+        this.tableInfoMapper = tableInfoMapper;
     }
 
     public List<TableIndex> listIndex(TableIndexQueryReq req) {
@@ -33,8 +39,13 @@ public class TableIndexService {
         tableIndexMapper.updateById(index);
     }
 
+    @Transactional
     public void addIndex(TableIndexEditReq req, Integer userId) {
+        var table = tableInfoMapper.selectById(req.getTableId());
         var index = BeanUtil.transfer(req, TableIndex.class);
+        index.setCreateId(userId);
+        index.setCreateTime(LocalDateTime.now());
+        index.setProjectId(table.getProjectId());
         tableIndexMapper.insert(index);
     }
 

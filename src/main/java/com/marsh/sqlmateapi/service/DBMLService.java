@@ -65,10 +65,14 @@ public class DBMLService {
                     || col.getType().startsWith("double")
                     || col.getType().startsWith("decimal")
                     || col.getType().startsWith("bool")
-                    || Objects.equals(col.getDefaultValue(), "null")) {
+                    || Objects.equals(col.getDefaultValue(), "null")
+                   ) {
                     extend.add(String.format("default: %s", col.getDefaultValue()));
+                } else if (col.getType().contains("time")) {
+                    extend.add(String.format("default: `%s`", col.getDefaultValue()));
                 } else {
                     extend.add(String.format("default: '%s'", col.getDefaultValue()));
+
                 }
             }
             if (col.getIsAutoIncrement()) {
@@ -77,10 +81,10 @@ public class DBMLService {
             if (StringUtils.isNotEmpty(col.getNote())) {
                 extend.add(String.format("note: '%s'", col.getNote()));
             }
-            if (col.getIsNull()) {
-                extend.add("null");
-            } else {
+            if (col.getIsNotNull()) {
                 extend.add("not null");
+            } else {
+                extend.add("null");
             }
             if (col.getIsUniqueKey()) {
                 extend.add("unique");
@@ -150,6 +154,7 @@ public class DBMLService {
                     var columnType = column.get("type").get("type_name").asText();
                     tableColumnMapper.insert(TableColumn.builder()
                                     .tableId(id)
+                                    .projectId(dbml.getProjectId())
                                     .name(columnName)
                                     .type(columnType)
                             .build());

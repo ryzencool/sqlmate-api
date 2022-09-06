@@ -21,7 +21,7 @@ public class DefaultColumnDetailEditReq {
 
     private String defaultValue;
 
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     private Boolean isUniqueKey;
 

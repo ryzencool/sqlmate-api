@@ -25,7 +25,7 @@ public class TableDetailResult {
 
     private Boolean isUniqueKey;
 
-    private Boolean isNull;
+    private Boolean isNotNull;
 
     private Integer tableId;
 

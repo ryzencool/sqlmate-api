@@ -18,7 +18,7 @@ public class AddProjectReq {
 
     private Integer[] teamIds;
 
-    private String tags;
+    private String[] tags;
 
     private Boolean isPublic;
 

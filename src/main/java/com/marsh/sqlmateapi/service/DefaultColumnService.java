@@ -77,7 +77,7 @@ public class DefaultColumnService {
                             .defaultValue(detail.getDefaultValue())
                             .isAutoIncrement(detail.getIsAutoIncrement())
                             .isPrimaryKey(detail.getIsPrimaryKey())
-                            .isNull(detail.getIsPrimaryKey())
+                            .isNotNull(detail.getIsPrimaryKey())
                             .name(detail.getName())
                             .note(detail.getNote())
                             .comment(detail.getComment())

@@ -5,10 +5,12 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.marsh.sqlmateapi.config.SqlExecutorProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
+@Slf4j
 @Component
 public class SqlExecutor {
 
@@ -19,6 +21,7 @@ public class SqlExecutor {
     }
 
     public  HttpResponse sendSql(String sql, String dbName, Integer dbType) {
+        log.info("sql: {}, dbname: {}, dbType: {}", sql, dbName, dbType);
         var map = new HashMap<String, Object>();
         map.put("sql", sql);
         map.put("dbName", dbName);

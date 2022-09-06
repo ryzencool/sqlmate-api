@@ -21,6 +21,8 @@ public class TableIndex {
 
     private String name;
 
+    private Integer projectId;
+
     private Integer tableId;
 
     private String type;

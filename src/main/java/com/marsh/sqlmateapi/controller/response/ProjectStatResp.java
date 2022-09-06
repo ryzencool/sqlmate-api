@@ -24,4 +24,6 @@ public class ProjectStatResp {
     private Long sqlCount;
 
     private Long indexCount;
+
+    private Long columnCount;
 }
