@@ -37,7 +37,10 @@ public class DefaultColumnService {
 
 
     public List<DefaultColumnTemplate> listTemplate(DefaultColumnTemplateQuery req, Integer userId) {
-        return defaultColumnTemplateMapper.selectList(new QueryWrapper<DefaultColumnTemplate>().lambda().eq(req.getName() != null, DefaultColumnTemplate::getName, req.getName()));
+        return defaultColumnTemplateMapper.selectList(new QueryWrapper<DefaultColumnTemplate>()
+                .lambda()
+                .eq(req.getName() != null, DefaultColumnTemplate::getName, req.getName())
+                .eq(DefaultColumnTemplate::getOwnerId, userId).or().eq(DefaultColumnTemplate::getOwnerId, 0));
     }
 
     public List<DefaultColumnDetail> listDetail(DefaultColumnDetailQueryReq req, Integer userId) {

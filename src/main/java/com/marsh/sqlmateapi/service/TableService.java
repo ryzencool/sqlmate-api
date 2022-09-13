@@ -1,11 +1,10 @@
 package com.marsh.sqlmateapi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.marsh.sqlmateapi.controller.request.DeleteTableReq;
 import com.marsh.sqlmateapi.controller.request.TableEditReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
-import com.marsh.sqlmateapi.domain.DefaultColumnDetail;
-import com.marsh.sqlmateapi.domain.TableColumn;
-import com.marsh.sqlmateapi.domain.TableInfo;
+import com.marsh.sqlmateapi.domain.*;
 import com.marsh.sqlmateapi.mapper.*;
 import com.marsh.sqlmateapi.mapper.param.TableDetailParam;
 import com.marsh.sqlmateapi.mapper.result.TableDetailResult;
@@ -29,12 +28,15 @@ public class TableService {
 
     private final TableColumnMapper tableColumnMapper;
 
+    private final TableIndexMapper tableIndexMapper;
+
     private final DefaultColumnDetailMapper defaultColumnTemplateMapper;
 
-    public TableService(TableInfoMapper tableInfoMapper, TableRelMapper tableRelMapper, TableColumnMapper tableColumnMapper, DefaultColumnDetailMapper defaultColumnTemplateMapper) {
+    public TableService(TableInfoMapper tableInfoMapper, TableRelMapper tableRelMapper, TableColumnMapper tableColumnMapper, TableIndexMapper tableIndexMapper, DefaultColumnDetailMapper defaultColumnTemplateMapper) {
         this.tableInfoMapper = tableInfoMapper;
         this.tableRelMapper = tableRelMapper;
         this.tableColumnMapper = tableColumnMapper;
+        this.tableIndexMapper = tableIndexMapper;
         this.defaultColumnTemplateMapper = defaultColumnTemplateMapper;
     }
 
@@ -121,5 +123,18 @@ public class TableService {
             }
         }
         return tableId;
+    }
+
+
+    public void deleteTable(DeleteTableReq req, Integer userId) {
+        tableInfoMapper.deleteById(req.getTableId());
+        var conColumn = new QueryWrapper<TableColumn>().lambda().eq(TableColumn::getTableId, req.getTableId());
+        var conIndex = new QueryWrapper<TableIndex>().lambda().eq(TableIndex::getTableId, req.getTableId());
+        tableColumnMapper.delete(conColumn);
+
+        tableIndexMapper.delete(conIndex);
+
+        tableRelMapper.delete(new QueryWrapper<TableRel>().lambda().eq(TableRel::getLeftTableId, req.getTableId()).or().eq(TableRel::getRightTableId, req.getTableId()));
+
     }
 }

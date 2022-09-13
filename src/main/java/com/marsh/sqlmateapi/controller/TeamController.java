@@ -36,10 +36,9 @@ public class TeamController {
         return BaseResponse.success();
     }
 
-    @GetMapping("/join")
-    public BaseResponse<Object> joinTeam(TeamJoinReq req) {
-        teamService.joinTeam(req);
-        return BaseResponse.success();
+    @PostMapping("/join")
+    public BaseResponse<Integer> joinTeam(@RequestBody TeamJoinReq req) {
+        return BaseResponse.success(teamService.joinTeam(req));
     }
 
     @GetMapping("/generateUrl")

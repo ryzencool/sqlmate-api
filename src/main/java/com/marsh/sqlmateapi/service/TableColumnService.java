@@ -37,6 +37,11 @@ public class TableColumnService {
         this.tableColumnMapper = tableColumnMapper;
     }
 
+
+    public  List<TableColumn> list(ColumnQueryReq req) {
+        return tableColumnMapper.selectList(new QueryWrapper<TableColumn>().lambda().eq(TableColumn::getTableId, req.getTableId()).orderByAsc(TableColumn::getCreateTime));
+    }
+
     public List<FullTableColumnDto> listColumn(ColumnQueryReq req) {
         var tableId = req.getTableId();
         var curColumns = tableColumnMapper.selectList(new QueryWrapper<TableColumn>()
@@ -107,7 +112,6 @@ public class TableColumnService {
 
     public void delColumns(Integer[] columnIds, Integer userId) {
         Arrays.stream(columnIds).forEach(tableColumnMapper::deleteById);
-
     }
 
     public void updateColumn(ColumnUpdateReq req, Integer userId) {

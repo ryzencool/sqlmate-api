@@ -97,12 +97,9 @@ public class UserInfoService {
         // 默认团队
         var team = teamService.addTeam(TeamEditReq.builder()
                 .masterId(userInfo.getId())
-                .name("默认团队")
+                .name("我的团队")
                 .build(), userInfo.getId());
-        teamService.joinTeam(TeamJoinReq.builder()
-                .teamId(team.getId())
-                .userId(userInfo.getId())
-                .build());
+        teamService.insertTeamUser(team.getId(), userInfo.getId());
 
         // 创建schema
 

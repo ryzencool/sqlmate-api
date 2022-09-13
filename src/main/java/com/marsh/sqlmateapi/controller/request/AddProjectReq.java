@@ -14,7 +14,7 @@ public class AddProjectReq {
 
     private String note;
 
-    private Integer dbTpe;
+    private Integer dbType;
 
     private Integer[] teamIds;
 

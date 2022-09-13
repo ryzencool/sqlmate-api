@@ -4,8 +4,8 @@ import com.marsh.sqlmateapi.controller.request.ColumnUpdateReq;
 import com.marsh.sqlmateapi.controller.request.ColumnDelReq;
 import com.marsh.sqlmateapi.controller.request.ColumnQueryReq;
 import com.marsh.sqlmateapi.controller.request.ColumnsDelReq;
+import com.marsh.sqlmateapi.domain.TableColumn;
 import com.marsh.sqlmateapi.service.TableColumnService;
-import com.marsh.sqlmateapi.service.dto.FullTableColumnDto;
 import com.marsh.zutils.auth.UserIdentity;
 import com.marsh.zutils.entity.BaseResponse;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +23,8 @@ public class TableColumnController {
     }
 
     @GetMapping("/list")
-    public BaseResponse<List<FullTableColumnDto>> listColumn(ColumnQueryReq req) {
-        return BaseResponse.success(tableColumnService.listColumn(req));
+    public BaseResponse<List<TableColumn>> listColumn(ColumnQueryReq req, UserIdentity identity) {
+        return BaseResponse.success(tableColumnService.list(req));
     }
 
     @PostMapping("/del")

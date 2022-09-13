@@ -7,8 +7,10 @@ import com.marsh.sqlmateapi.controller.request.ColumnQueryReq;
 import com.marsh.sqlmateapi.controller.request.DBMLProjectImportReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
 import com.marsh.sqlmateapi.domain.TableColumn;
+import com.marsh.sqlmateapi.domain.TableIndex;
 import com.marsh.sqlmateapi.domain.TableInfo;
 import com.marsh.sqlmateapi.mapper.TableColumnMapper;
+import com.marsh.sqlmateapi.mapper.TableIndexMapper;
 import com.marsh.sqlmateapi.mapper.TableInfoMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DBMLService {
 
-
     private final TableService tableService;
 
     private final TableColumnService tableColumnService;
@@ -34,14 +35,17 @@ public class DBMLService {
 
     private final TableColumnMapper tableColumnMapper;
 
+    private final TableIndexMapper tableIndexMapper;
+
     public DBMLService(TableService tableService,
                        TableColumnService tableColumnService,
                        TableInfoMapper tableInfoMapper,
-                       TableColumnMapper tableColumnMapper) {
+                       TableColumnMapper tableColumnMapper, TableIndexMapper tableIndexMapper) {
         this.tableService = tableService;
         this.tableColumnService = tableColumnService;
         this.tableInfoMapper = tableInfoMapper;
         this.tableColumnMapper = tableColumnMapper;
+        this.tableIndexMapper = tableIndexMapper;
     }
 
     public String exportTableDBML(Integer tableId) {
@@ -105,6 +109,10 @@ public class DBMLService {
             dbml.append(String.format("\n\t Note: '%s'\n", table.getNote()));
         }
         dbml.append("}");
+
+
+        var indexList = tableIndexMapper.selectList(new QueryWrapper<TableIndex>().lambda().eq(TableIndex::getTableId, table.getId()));
+
         return dbml.toString();
     }
 

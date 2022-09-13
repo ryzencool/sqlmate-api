@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TeamJoinReq {
 
-    private Integer userId;
-
-    private Integer teamId;
+    private String key;
 }

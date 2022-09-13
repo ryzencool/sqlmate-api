@@ -1,5 +1,6 @@
 package com.marsh.sqlmateapi.controller;
 
+import com.marsh.sqlmateapi.controller.request.DeleteTableReq;
 import com.marsh.sqlmateapi.controller.request.TableEditReq;
 import com.marsh.sqlmateapi.controller.request.TableQueryReq;
 import com.marsh.sqlmateapi.domain.TableInfo;
@@ -48,6 +49,12 @@ public class TableController {
     public BaseResponse<Integer> createTable(@RequestBody TableEditReq req, UserIdentity identity) {
 
         return BaseResponse.success(tableService.createTable(req, identity.getUserId()));
+    }
+
+    @PostMapping("/delete")
+    public BaseResponse<Object> deleteTable(@RequestBody DeleteTableReq req, UserIdentity identity) {
+        tableService.deleteTable(req, identity.getUserId());
+        return BaseResponse.success();
     }
 
 }
