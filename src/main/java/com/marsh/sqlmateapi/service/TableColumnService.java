@@ -38,7 +38,7 @@ public class TableColumnService {
     }
 
 
-    public  List<TableColumn> list(ColumnQueryReq req) {
+    public List<TableColumn> list(ColumnQueryReq req) {
         return tableColumnMapper.selectList(new QueryWrapper<TableColumn>().lambda().eq(TableColumn::getTableId, req.getTableId()).orderByAsc(TableColumn::getCreateTime));
     }
 
@@ -47,7 +47,10 @@ public class TableColumnService {
         var curColumns = tableColumnMapper.selectList(new QueryWrapper<TableColumn>()
                 .lambda()
                 .eq(req.getTableId() != null, TableColumn::getTableId, req.getTableId()));
-        var rels = tableRelMapper.selectList(new QueryWrapper<TableRel>().lambda().eq(TableRel::getLeftTableId, tableId).or().eq(TableRel::getRightTableId, tableId));
+        var rels = tableRelMapper.selectList(new QueryWrapper<TableRel>().lambda()
+                .eq(TableRel::getLeftTableId, tableId)
+                .or()
+                .eq(TableRel::getRightTableId, tableId));
         List<FullTableColumnDto> fullColumns;
         if (CollectionUtils.isNotEmpty(rels)) {
             var tableIdSet = new HashSet<Integer>();
